@@ -71,50 +71,105 @@ const tireDatabase = [
   { nombre: "Pirelli ST:01", tipo: "vial", especificacion: "425/65R22.5", medidas: { ancho: 425, aspecto: 65, diametro: 22.5 }, aplicacion: "ruta", uso: "Super ancho - Flotación", precio: "Consulta" }
 ];
 
-// ========== MENÚ MÓVIL MEJORADO ==========
+// ========== MENÚ MÓVIL CORREGIDO ==========
 const mobileIcon = document.querySelector('.mobile-menu-icon');
 const navMenu = document.querySelector('.nav');
 const navLinks = document.querySelectorAll('.nav-link');
-const body = document.body;
+let scrollPosition = 0;
 
+// Función para cerrar el menú
+function closeMenu() {
+  if (!navMenu || !navMenu.classList.contains('active')) return;
+  
+  navMenu.classList.remove('active');
+  document.body.classList.remove('menu-open');
+  
+  // Restaurar scroll position
+  if (scrollPosition) {
+    window.scrollTo(0, scrollPosition);
+    scrollPosition = 0;
+  }
+  
+  if (mobileIcon) {
+    const icon = mobileIcon.querySelector('i');
+    if (icon) {
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+    }
+  }
+}
+
+// Función para abrir el menú
+function openMenu() {
+  if (!navMenu || navMenu.classList.contains('active')) return;
+  
+  // Guardar posición actual del scroll
+  scrollPosition = window.pageYOffset;
+  
+  navMenu.classList.add('active');
+  document.body.classList.add('menu-open');
+  
+  if (mobileIcon) {
+    const icon = mobileIcon.querySelector('i');
+    if (icon) {
+      icon.classList.remove('fa-bars');
+      icon.classList.add('fa-times');
+    }
+  }
+}
+
+// Toggle del menú móvil
 if (mobileIcon) {
   mobileIcon.addEventListener('click', (e) => {
     e.stopPropagation();
-    navMenu.classList.toggle('active');
-    body.classList.toggle('menu-open');
-    
-    const icon = mobileIcon.querySelector('i');
     if (navMenu.classList.contains('active')) {
-      icon.classList.remove('fa-bars');
-      icon.classList.add('fa-times');
+      closeMenu();
     } else {
-      icon.classList.remove('fa-times');
-      icon.classList.add('fa-bars');
+      openMenu();
     }
   });
 }
 
+// Cerrar menú al hacer click en un enlace
 navLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    navMenu.classList.remove('active');
-    body.classList.remove('menu-open');
-    const icon = mobileIcon.querySelector('i');
-    icon.classList.remove('fa-times');
-    icon.classList.add('fa-bars');
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href');
+    if (targetId && targetId !== '#') {
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        closeMenu();
+        setTimeout(() => {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
   });
 });
 
+// Cerrar menú al hacer click fuera (usando el overlay)
 document.addEventListener('click', (e) => {
-  if (navMenu.classList.contains('active') && 
-      !navMenu.contains(e.target) && 
-      !mobileIcon.contains(e.target)) {
-    navMenu.classList.remove('active');
-    body.classList.remove('menu-open');
-    const icon = mobileIcon.querySelector('i');
-    icon.classList.remove('fa-times');
-    icon.classList.add('fa-bars');
+  if (navMenu && navMenu.classList.contains('active')) {
+    // Si el click NO es dentro del menú Y NO es en el botón hamburguesa
+    if (!navMenu.contains(e.target) && mobileIcon && !mobileIcon.contains(e.target)) {
+      closeMenu();
+    }
   }
 });
+
+// Cerrar menú al redimensionar a desktop
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768 && navMenu && navMenu.classList.contains('active')) {
+    closeMenu();
+  }
+});
+
+// Prevenir que el overlay cierre el menú cuando se hace click dentro del menú
+if (navMenu) {
+  navMenu.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+}
 
 // ========== HEADER SCROLL EFFECT ==========
 window.addEventListener('scroll', () => {
@@ -127,10 +182,12 @@ window.addEventListener('scroll', () => {
     header.classList.remove('scrolled');
   }
   
-  if (window.scrollY > 300) {
-    scrollTopBtn.classList.add('show');
-  } else {
-    scrollTopBtn.classList.remove('show');
+  if (scrollTopBtn) {
+    if (window.scrollY > 300) {
+      scrollTopBtn.classList.add('show');
+    } else {
+      scrollTopBtn.classList.remove('show');
+    }
   }
 });
 
@@ -160,9 +217,9 @@ async function loadPromotions() {
   if (!promosContainer) return;
   
   const examplePromos = [
-    { titulo: "2x1 en Neumáticos Pirelli Agro", descripcion: "Llevá dos neumáticos Pirelli agrícolas y pagá uno.", precio: "$120.000", precioAnterior: "$240.000", imagen: "assets/img/promo-agro.jpg", whatsappLink: "https://wa.me/5492984XXXXXX?text=2x1%20Pirelli%20Agro" },
-    { titulo: "20% OFF en Pirelli Viales", descripcion: "Descuento especial en línea vial Pirelli.", precio: "$180.000", precioAnterior: "$225.000", imagen: "assets/img/promo-vial.jpg", whatsappLink: "https://wa.me/5492984XXXXXX?text=20%25%20OFF%20Pirelli%20Vial" },
-    { titulo: "Financiación sin interés", descripcion: "Hasta 6 cuotas sin interés en toda la línea Pirelli.", precio: "Consultar", precioAnterior: null, imagen: "assets/img/promo-financiacion.jpg", whatsappLink: "https://wa.me/5492984XXXXXX?text=Financiaci%C3%B3n%20Pirelli" }
+    { titulo: "2x1 en Neumáticos Pirelli Agro", descripcion: "Llevá dos neumáticos Pirelli agrícolas y pagá uno.", precio: "$120.000", precioAnterior: "$240.000", imagen: "assets/img/promo-agro.jpg", whatsappLink: "https://wa.me/5492984287176?text=2x1%20Pirelli%20Agro" },
+    { titulo: "20% OFF en Pirelli Viales", descripcion: "Descuento especial en línea vial Pirelli.", precio: "$180.000", precioAnterior: "$225.000", imagen: "assets/img/promo-vial.jpg", whatsappLink: "https://wa.me/5492984287176?text=20%25%20OFF%20Pirelli%20Vial" },
+    { titulo: "Financiación sin interés", descripcion: "Hasta 6 cuotas sin interés en toda la línea Pirelli.", precio: "Consultar", precioAnterior: null, imagen: "assets/img/promo-financiacion.jpg", whatsappLink: "https://wa.me/5492984287176?text=Financiaci%C3%B3n%20Pirelli" }
   ];
   
   promosContainer.innerHTML = examplePromos.map(promo => `
@@ -190,7 +247,7 @@ async function loadPromotions() {
 }
 
 // ========== FUNCIÓN WHATSAPP ==========
-const numeroWhatsapp = '5492984XXXXXX';
+const numeroWhatsapp = '5492984287176';
 
 function enviarWhatsApp(modelo, medida = '', aplicacion = '', uso = '') {
   let texto = `Hola, consulto por el neumático ${modelo} (PIRELLI)`;
@@ -228,7 +285,7 @@ searchTabs.forEach(tab => {
     tab.classList.add('active');
     searchPanels.forEach(panel => panel.classList.remove('active'));
     document.getElementById(`panel-${tabId}`).classList.add('active');
-    searchResultsDiv.style.display = 'none';
+    if (searchResultsDiv) searchResultsDiv.style.display = 'none';
   });
 });
 
@@ -238,7 +295,7 @@ typeBtns.forEach(btn => {
     typeBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedType = btn.getAttribute('data-type');
-    searchResultsDiv.style.display = 'none';
+    if (searchResultsDiv) searchResultsDiv.style.display = 'none';
   });
 });
 
@@ -303,7 +360,6 @@ function searchTires() {
   // Búsqueda por vehículo
   else if (activeTab === 'vehiculo') {
     const vehiculo = tipoVehiculoSelect?.value;
-    const modelo = modeloVehiculoInput?.value?.toLowerCase();
     
     if (vehiculo) {
       const aplicacionBuscada = getAplicacionPorVehiculo(vehiculo);
@@ -314,7 +370,6 @@ function searchTires() {
         }
       });
     } else {
-      // Si no seleccionó vehículo, mostrar todos del tipo seleccionado
       tireDatabase.forEach(tire => {
         if (tire.tipo === selectedType) results.push(tire);
       });
@@ -324,7 +379,6 @@ function searchTires() {
   // Búsqueda por aplicación
   else if (activeTab === 'aplicacion') {
     const aplicacion = terrenoSelect?.value;
-    const rangoPrecio = rangoPrecioSelect?.value;
     
     tireDatabase.forEach(tire => {
       if (tire.tipo !== selectedType) return;
@@ -333,7 +387,6 @@ function searchTires() {
       }
     });
     
-    // Si no hay filtro de aplicación, mostrar todos
     if (results.length === 0 && (!aplicacion || aplicacion === '')) {
       tireDatabase.forEach(tire => {
         if (tire.tipo === selectedType) results.push(tire);
@@ -358,6 +411,8 @@ function searchTires() {
 }
 
 function displaySearchResults(results) {
+  if (!searchResultsDiv || !resultsCount || !resultsList) return;
+  
   if (results.length > 0) {
     searchResultsDiv.style.display = 'block';
     resultsCount.textContent = results.length;
@@ -431,9 +486,11 @@ if (buscarBtn) {
 // ========== FAQ ACORDEÓN ==========
 document.querySelectorAll('.faq-item').forEach(item => {
   const question = item.querySelector('.faq-question');
-  question.addEventListener('click', () => {
-    item.classList.toggle('active');
-  });
+  if (question) {
+    question.addEventListener('click', () => {
+      item.classList.toggle('active');
+    });
+  }
 });
 
 // ========== ACTIVE NAV LINK ==========
@@ -461,4 +518,22 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPromotions();
 });
 
-console.log('Brevi Neumáticos - Versión Pirelli - Buscador mejorado');
+// ========== AJUSTE DE ALTURA SOLO PARA HERO ==========
+function setHeroHeight() {
+  const hero = document.querySelector('.hero');
+  const heroSlider = document.querySelector('.hero-slider');
+  const heroWrapper = document.querySelector('.hero-content-wrapper');
+  
+  if (hero) hero.style.height = `${window.innerHeight}px`;
+  if (heroSlider) heroSlider.style.height = `${window.innerHeight}px`;
+  if (heroWrapper) heroWrapper.style.height = `${window.innerHeight}px`;
+  
+  document.querySelectorAll('.hero .swiper-slide').forEach(slide => {
+    slide.style.height = `${window.innerHeight}px`;
+  });
+}
+
+window.addEventListener('load', setHeroHeight);
+window.addEventListener('resize', setHeroHeight);
+
+console.log('Brevi Neumáticos - Versión Corregida - Menú móvil funcionando correctamente');
