@@ -37,6 +37,7 @@ body {
   padding: 0 20px;
   position: relative;
   z-index: 2;
+  overflow-x: hidden;
 }
 
 /* ========== PRELOADER ========== */
@@ -1467,7 +1468,9 @@ body {
   color: var(--gris-claro);
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE - VERSIÓN MEJORADA PARA MÓVIL ========== */
+
+/* Tablets (768px - 992px) */
 @media (max-width: 992px) {
   .services-grid,
   .contact-grid,
@@ -1485,7 +1488,7 @@ body {
   
   .hero-content h1,
   .hero-content h2 {
-    font-size: 36px;
+    font-size: 42px;
   }
   
   .search-form {
@@ -1499,97 +1502,17 @@ body {
   .btn-large {
     grid-column: span 2;
   }
-}
-
-@media (max-width: 768px) {
-  .mobile-menu-icon {
-    display: block;
-  }
-  
-  .nav {
-    position: fixed;
-    top: 90px;
-    left: -100%;
-    width: 80%;
-    height: calc(100vh - 90px);
-    background: var(--negro);
-    box-shadow: var(--shadow);
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 999;
-    border-right: 1px solid var(--amarillo);
-  }
-  
-  .nav.active {
-    left: 0;
-  }
-  
-  .nav-menu {
-    flex-direction: column;
-    padding: 30px;
-    gap: 20px;
-  }
-  
-  .services-grid,
-  .contact-grid,
-  .footer-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .search-form {
-    grid-template-columns: 1fr;
-  }
-  
-  .input-group.full-width {
-    grid-column: span 1;
-  }
-  
-  .btn-large {
-    grid-column: span 1;
-  }
-  
-  .hero-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .hero-content h1,
-  .hero-content h2 {
-    font-size: 28px;
-  }
   
   .section-title {
-    font-size: 28px;
+    font-size: 32px;
   }
-  
-  .stats-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .search-tabs {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .search-tab {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .whatsapp-float {
-    width: 50px;
-    height: 50px;
-    font-size: 28px;
-    bottom: 20px;
-    right: 20px;
-  }
-  
-  .scroll-top {
-    bottom: 20px;
-    left: 20px;
-  }
-  
-  body.menu-open {
-    overflow: hidden;
+}
+
+/* Móviles (hasta 768px) */
+@media (max-width: 768px) {
+  /* Header y menú móvil */
+  .mobile-menu-icon {
+    display: block;
   }
   
   .header-container {
@@ -1608,6 +1531,42 @@ body {
     padding: 10px 12px;
   }
   
+  .nav {
+    position: fixed;
+    top: 90px;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: calc(100vh - 90px);
+    background: var(--negro);
+    box-shadow: var(--shadow);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+    border-right: 2px solid var(--amarillo);
+    overflow-y: auto;
+  }
+  
+  .nav.active {
+    left: 0;
+  }
+  
+  .nav-menu {
+    flex-direction: column;
+    padding: 30px;
+    gap: 25px;
+  }
+  
+  .nav-link {
+    font-size: 18px;
+    display: block;
+    padding: 10px 0;
+  }
+  
+  body.menu-open {
+    overflow: hidden;
+  }
+  
+  /* Hero section */
   .hero {
     margin-top: 70px;
   }
@@ -1616,18 +1575,94 @@ body {
     height: 500px;
   }
   
-  .results-list-item {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
+  .hero-content h1,
+  .hero-content h2 {
+    font-size: 28px;
   }
   
-  .results-list-item .btn-whatsapp {
+  .hero-content p {
+    font-size: 16px;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
     width: 100%;
   }
   
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Secciones generales */
+  .container {
+    padding: 0 16px;
+  }
+  
+  .section-header {
+    margin-bottom: 40px;
+  }
+  
+  .section-header .section-tag {
+    font-size: 11px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+  }
+  
+  /* Grids a 1 columna */
+  .services-grid,
+  .contact-grid,
+  .footer-grid,
+  .stats-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  /* Tarjetas */
+  .service-card,
+  .contact-card,
+  .stat-item {
+    text-align: center;
+    padding: 25px;
+  }
+  
+  .service-card h3,
+  .contact-card h3 {
+    font-size: 20px;
+  }
+  
+  /* About */
+  .about-grid {
+    gap: 30px;
+  }
+  
+  .about-text p {
+    font-size: 16px;
+  }
+  
+  .features-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .feature {
+    justify-content: center;
+  }
+  
+  .about-stats {
+    gap: 15px;
+  }
+  
+  .stat-card .number {
+    font-size: 36px;
+  }
+  
+  /* Marcas */
   .brand-single {
-    margin: 0 20px;
+    margin: 0 16px;
     padding: 30px 20px;
   }
   
@@ -1638,9 +1673,200 @@ body {
   .brand-logo-single h3 {
     font-size: 24px;
   }
+  
+  /* Buscador */
+  .searcher-card {
+    padding: 25px 20px;
+  }
+  
+  .search-type {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .type-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .search-tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-tab {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .search-form {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .input-group.full-width {
+    grid-column: span 1;
+  }
+  
+  .btn-large {
+    grid-column: span 1;
+  }
+  
+  .results-list-item {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .result-whatsapp {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Contacto */
+  .contact-card {
+    padding: 30px 20px;
+  }
+  
+  .contact-value {
+    font-size: 16px;
+    word-break: break-word;
+  }
+  
+  .contact-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .schedule-info {
+    padding: 20px;
+  }
+  
+  .schedule-info p {
+    font-size: 14px;
+  }
+  
+  /* FAQ */
+  .faq-question {
+    font-size: 16px;
+    padding: 15px;
+  }
+  
+  .faq-answer {
+    font-size: 14px;
+  }
+  
+  /* Footer */
+  .footer-grid {
+    gap: 30px;
+  }
+  
+  .footer-col {
+    text-align: center;
+  }
+  
+  .footer-col h3::after,
+  .footer-col h4::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
+  
+  .footer-col ul li {
+    text-align: center;
+  }
+  
+  .footer-col iframe {
+    height: 120px;
+  }
+  
+  /* Botones flotantes */
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .scroll-top {
+    bottom: 20px;
+    left: 20px;
+  }
+  
+  /* Promociones */
+  .promo-card {
+    margin: 5px;
+  }
+  
+  .promo-title {
+    font-size: 18px;
+  }
+  
+  .promo-price {
+    font-size: 20px;
+  }
+  
+  /* Estadísticas */
+  .stat-item i {
+    font-size: 36px;
+  }
+  
+  .stat-number {
+    font-size: 28px;
+  }
 }
 
-/* ========== TRANSICIONES ========== */
+/* Móviles muy pequeños (hasta 480px) */
+@media (max-width: 480px) {
+  .hero-content h1,
+  .hero-content h2 {
+    font-size: 24px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+  }
+  
+  .btn-primary, 
+  .btn-secondary,
+  .btn-outline {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+  
+  .searcher-card {
+    padding: 20px 15px;
+  }
+  
+  .input-group input,
+  .input-group select {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  .contact-value {
+    font-size: 14px;
+  }
+  
+  .stat-card .number {
+    font-size: 32px;
+  }
+  
+  .nav {
+    top: 70px;
+    height: calc(100vh - 70px);
+  }
+  
+  .hero {
+    margin-top: 70px;
+  }
+}
+
+/* ========== TRANSICIONES Y UTILIDADES ========== */
 .btn-whatsapp {
   background: #25D366;
   border: none;
@@ -1672,4 +1898,56 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--amarillo-oscuro);
+}
+
+/* ========== MEJORAS ADICIONALES PARA MÓVIL ========== */
+@media (max-width: 768px) {
+  /* Centrado de textos en móvil */
+  .hero-content,
+  .section-header,
+  .about-text,
+  .service-card,
+  .contact-card,
+  .stat-item,
+  .promo-info,
+  .brand-single,
+  .search-note {
+    text-align: center;
+  }
+  
+  /* Ajuste de imágenes */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Mejora de espaciado */
+  .stats-promos-section,
+  .about,
+  .services,
+  .searcher,
+  .contact,
+  .faq {
+    padding: 50px 0;
+  }
+  
+  /* Botones centrados */
+  .btn-outline,
+  .btn-primary,
+  .btn-secondary {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Listas centradas */
+  .features-list .feature {
+    justify-content: flex-start;
+    text-align: left;
+  }
+  
+  /* Ajuste de iconos en móvil */
+  .feature i {
+    min-width: 24px;
+  }
 }
