@@ -10,7 +10,7 @@
   <title>Brevi Neumáticos | Agro & Vial | Allen, RN</title>
   <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
   <link rel="stylesheet" href="css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -23,7 +23,7 @@
   <p>Cargando...</p>
 </div>
 
-<!-- ========== HEADER MEJORADO ========== -->
+<!-- ========== HEADER ========== -->
 <header class="header">
   <div class="header-container">
     <div class="logo">
@@ -36,6 +36,7 @@
         <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
         <li><a href="#servicios" class="nav-link">Servicios</a></li>
         <li><a href="#buscador" class="nav-link">Buscador</a></li>
+        <li><a href="#promociones" class="nav-link">Promociones</a></li>
         <li><a href="#contacto" class="nav-link">Contacto</a></li>
       </ul>
     </nav>
@@ -93,43 +94,83 @@
     </div>
   </section>
 
-  <!-- ========== SECCIÓN DE ESTADÍSTICAS + PROMOCIONES ========== -->
-  <section class="stats-promos-section">
+  <!-- ========== SECCIÓN PROMOCIONES PROFESIONAL ========== -->
+  <section id="promociones" class="promos-section-full">
+    <!-- Fondo decorativo -->
+    <div class="promos-bg-layer"></div>
+    <div class="promos-bg-overlay"></div>
+
     <div class="container">
-      <div class="stats-container">
-        <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
-          <i class="fas fa-tractor"></i>
-          <div class="stat-number">+500</div>
-          <small>Clientes agro</small>
+
+      <!-- Encabezado de sección -->
+      <div class="promos-header" data-aos="fade-up">
+        <div class="promos-header-left">
+          <span class="section-tag">Ofertas activas</span>
+          <h2 class="section-title">Nuestras <span class="highlight">Promociones</span></h2>
+          <p class="promos-subtitle">Descuentos especiales en neumáticos Pirelli. Actualizamos las ofertas cada semana.</p>
         </div>
-        <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
-          <i class="fas fa-truck"></i>
-          <div class="stat-number">+200</div>
-          <small>Flotas viales</small>
-        </div>
-        <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
-          <i class="fas fa-map-marker-alt"></i>
-          <div class="stat-number">Allen, RN</div>
-          <small>Av. Julio A. Roca 955</small>
-        </div>
-        <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
-          <i class="fas fa-clock"></i>
-          <div class="stat-number">24/7</div>
-          <small>Asesoramiento</small>
+        <div class="promos-header-right" data-aos="fade-left" data-aos-delay="100">
+          <a href="https://wa.me/5492984287176?text=Hola!%20Quiero%20consultar%20sobre%20las%20promociones%20vigentes." class="btn-promos-wa" target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp"></i>
+            <span>Consultar todas las ofertas</span>
+          </a>
         </div>
       </div>
 
-      <div id="promociones" class="promos-section" data-aos="fade-up">
-        <div class="section-header">
-          <span class="section-tag">Promociones activas</span>
-          <h2 class="section-title">Ofertas <span class="highlight">especiales</span></h2>
-          <div class="section-line"></div>
+      <!-- CARRUSEL PRINCIPAL DE BANNERS (pantalla completa) -->
+      <div class="banner-carousel-wrap" data-aos="fade-up" data-aos-delay="100">
+        <div class="banner-carousel swiper">
+          <div class="swiper-wrapper" id="bannerContainer">
+            <!-- Los banners se cargan aquí dinámicamente desde JS / Firebase -->
+            <!-- Skeleton mientras carga -->
+            <div class="swiper-slide banner-skeleton-slide">
+              <div class="banner-skeleton"></div>
+            </div>
+          </div>
+          <!-- Navegación -->
+          <div class="banner-prev swiper-button-prev"><i class="fas fa-chevron-left"></i></div>
+          <div class="banner-next swiper-button-next"><i class="fas fa-chevron-right"></i></div>
+          <!-- Paginación -->
+          <div class="banner-pagination swiper-pagination"></div>
+          <!-- Barra de progreso -->
+          <div class="banner-progress"><div class="banner-progress-bar" id="bannerProgressBar"></div></div>
         </div>
-        <div class="promos-carousel swiper">
-          <div class="swiper-wrapper" id="promosContainer"></div>
+      </div>
+
+      <!-- CARRUSEL DE TARJETAS DE PROMO -->
+      <div class="promo-cards-section" data-aos="fade-up" data-aos-delay="150">
+        <div class="promo-cards-header">
+          <h3 class="promo-cards-title"><i class="fas fa-fire"></i> Ofertas destacadas</h3>
+          <div class="promo-cards-nav">
+            <button class="pc-btn-prev" aria-label="Anterior"><i class="fas fa-arrow-left"></i></button>
+            <button class="pc-btn-next" aria-label="Siguiente"><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <div class="promo-cards-carousel swiper">
+          <div class="swiper-wrapper" id="promosContainer">
+            <!-- Skeletons -->
+            <div class="swiper-slide"><div class="promo-card promo-skeleton"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div></div>
+            <div class="swiper-slide"><div class="promo-card promo-skeleton"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div></div>
+            <div class="swiper-slide"><div class="promo-card promo-skeleton"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div></div>
+          </div>
           <div class="swiper-pagination promo-pagination"></div>
         </div>
       </div>
+
+      <!-- CTA inferior -->
+      <div class="promos-cta" data-aos="fade-up" data-aos-delay="200">
+        <div class="promos-cta-inner">
+          <div class="promos-cta-text">
+            <i class="fas fa-tag"></i>
+            <span>¿No encontrás lo que buscás? Consultanos y te armamos una oferta a medida.</span>
+          </div>
+          <a href="https://wa.me/5492984287176" class="btn-primary" target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp"></i> Hablar con un asesor
+          </a>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -153,9 +194,22 @@
           <a href="#contacto" class="btn-outline">Contactar asesor <i class="fas fa-headset"></i></a>
         </div>
         <div class="about-stats" data-aos="fade-left">
-          <div class="stat-card"><span class="number">15+</span><span class="label">Años de experiencia</span></div>
-          <div class="stat-card"><span class="number">Pirelli</span><span class="label">Marca oficial</span></div>
-          <div class="stat-card"><span class="number">100%</span><span class="label">Recomendación</span></div>
+          <div class="stat-card">
+            <span class="number">+15</span>
+            <span class="label">Años de experiencia en el sector</span>
+          </div>
+          <div class="stat-card">
+            <span class="number">+500</span>
+            <span class="label">Clientes del sector agropecuario</span>
+          </div>
+          <div class="stat-card">
+            <span class="number">+200</span>
+            <span class="label">Flotas viales equipadas</span>
+          </div>
+          <div class="stat-card">
+            <span class="number">24/7</span>
+            <span class="label">Asesoramiento por WhatsApp</span>
+          </div>
         </div>
       </div>
     </div>
@@ -165,90 +219,94 @@
   <section id="servicios" class="services">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
-        <span class="section-tag">Nuestros servicios</span>
-        <h2 class="section-title">Soluciones <span class="highlight">integrales</span> para tu vehículo</h2>
+        <span class="section-tag">Lo que hacemos</span>
+        <h2 class="section-title">Nuestros <span class="highlight">servicios</span></h2>
         <div class="section-line"></div>
       </div>
       <div class="services-grid">
         <div class="service-card" data-aos="fade-up" data-aos-delay="0">
-          <div class="service-icon"><i class="fas fa-tractor"></i></div>
+          <i class="fas fa-tractor service-icon"></i>
           <h3>Neumáticos Agro</h3>
-          <p>Tractores, cosechadoras, implementos. Neumáticos Pirelli de alta calidad.</p>
+          <p>Stock permanente Pirelli para tractores, cosechadoras, implementos y maquinaria agrícola de todo tipo.</p>
         </div>
         <div class="service-card" data-aos="fade-up" data-aos-delay="100">
-          <div class="service-icon"><i class="fas fa-truck"></i></div>
+          <i class="fas fa-truck service-icon"></i>
           <h3>Neumáticos Viales</h3>
-          <p>Camiones, trailers, buses. Máxima duración en ruta y bajo consumo.</p>
+          <p>Línea completa Pirelli para camiones, semirremolques, maquinaria vial y flotas de transporte.</p>
         </div>
         <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-          <div class="service-icon"><i class="fas fa-wrench"></i></div>
+          <i class="fas fa-tools service-icon"></i>
           <h3>Montaje y Balanceo</h3>
-          <p>Equipos de última generación. Servicio en taller o a domicilio.</p>
+          <p>Taller propio con equipamiento profesional para montaje, desmontaje y balanceo en Allen.</p>
         </div>
         <div class="service-card" data-aos="fade-up" data-aos-delay="300">
-          <div class="service-icon"><i class="fas fa-charging-station"></i></div>
-          <h3>Asesoría Técnica</h3>
-          <p>Te ayudamos a elegir el neumático ideal según tu terreno y uso.</p>
+          <i class="fas fa-shipping-fast service-icon"></i>
+          <h3>Envíos Regionales</h3>
+          <p>Despacho a todo Río Negro y Neuquén. Coordinamos entrega en chacra, campo o depósito.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== MARCAS - SOLO PIRELLI ========== -->
-  <section id="marcas" class="brands">
+  <!-- ========== MARCAS ========== -->
+  <section class="brands">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
-        <span class="section-tag">Marca oficial</span>
-        <h2 class="section-title">Trabajamos con la <span class="highlight">mejor marca</span></h2>
+        <span class="section-tag">Distribuidor oficial</span>
+        <h2 class="section-title">Trabajamos con <span class="highlight">Pirelli</span></h2>
+        <div class="section-line"></div>
       </div>
-      <div class="brand-single">
-        <div class="brand-logo-single" data-aos="zoom-in">
-          <img src="assets/img/pirelli-logo.png" alt="Pirelli" onerror="this.src='assets/img/pirelli-Photoroom-Photoroom.png'">
-          <h3>PIRELLI</h3>
-          <p>Calidad y tecnología italiana para el campo y la ruta</p>
+      <div class="brand-single" data-aos="zoom-in">
+        <div class="brand-logo-single">
+          <img src="assets/img/pirelli-logo.png" alt="Pirelli" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <h3 style="display:none;">PIRELLI</h3>
+        </div>
+        <p>Distribuidores oficiales Pirelli para la región del Alto Valle y Patagonia Norte. Acceso al catálogo completo agro y vial con garantía de fábrica.</p>
+        <div class="brand-badges">
+          <span class="brand-badge"><i class="fas fa-shield-alt"></i> Garantía oficial</span>
+          <span class="brand-badge"><i class="fas fa-box-open"></i> Stock permanente</span>
+          <span class="brand-badge"><i class="fas fa-headset"></i> Soporte técnico</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== BUSCADOR PROFESIONAL MEJORADO - SOLO PIRELLI ========== -->
+  <!-- ========== BUSCADOR ========== -->
   <section id="buscador" class="searcher">
     <div class="container">
       <div class="section-header" data-aos="fade-up">
         <span class="section-tag">Encontrá tu neumático</span>
-        <h2 class="section-title">Buscador por <span class="highlight">medida o rodado</span></h2>
-        <p>Ingresá las especificaciones y te asesoramos al instante por WhatsApp</p>
-        <p class="pirelli-note"><i class="fas fa-star"></i> Todos nuestros neumáticos son <strong>PIRELLI</strong>, la mejor calidad garantizada <i class="fas fa-star"></i></p>
+        <h2 class="section-title">Buscador <span class="highlight">profesional</span></h2>
+        <div class="section-line"></div>
       </div>
       <div class="searcher-card" data-aos="fade-up">
         <div class="search-type">
-          <button class="type-btn active" data-type="agro">Agrícola</button>
-          <button class="type-btn" data-type="vial">Vial</button>
+          <button class="type-btn active" data-type="agro"><i class="fas fa-tractor"></i> Agro</button>
+          <button class="type-btn" data-type="vial"><i class="fas fa-truck"></i> Vial</button>
         </div>
-        
         <div class="search-tabs">
-          <button class="search-tab active" data-tab="medida">Buscar por Medida</button>
-          <button class="search-tab" data-tab="vehiculo">Buscar por Vehículo</button>
-          <button class="search-tab" data-tab="aplicacion">Buscar por Aplicación</button>
+          <button class="search-tab active" data-tab="medida"><i class="fas fa-ruler"></i> Por medida</button>
+          <button class="search-tab" data-tab="vehiculo"><i class="fas fa-car"></i> Por vehículo</button>
+          <button class="search-tab" data-tab="aplicacion"><i class="fas fa-mountain"></i> Por aplicación</button>
         </div>
         
         <div class="search-panel active" id="panel-medida">
           <div class="search-form">
             <div class="input-group">
-              <label><i class="fas fa-arrows-alt-h"></i> Ancho (mm)</label>
-              <input type="number" id="ancho" placeholder="Ej: 295, 480, 650">
+              <label><i class="fas fa-text-width"></i> Ancho (mm)</label>
+              <input type="number" id="ancho" placeholder="Ej: 480" min="100" max="900">
             </div>
             <div class="input-group">
-              <label><i class="fas fa-percent"></i> Relación de aspecto (%)</label>
-              <input type="number" id="aspecto" placeholder="Ej: 80, 70, 65">
+              <label><i class="fas fa-percentage"></i> Relación de aspecto (%)</label>
+              <input type="number" id="aspecto" placeholder="Ej: 70" min="30" max="100">
             </div>
             <div class="input-group">
-              <label><i class="fas fa-circle"></i> Diámetro (pulgadas)</label>
-              <input type="number" id="diametro" placeholder="Ej: 22.5, 38, 34">
+              <label><i class="fas fa-circle-notch"></i> Diámetro (pulgadas)</label>
+              <input type="number" id="diametro" placeholder='Ej: 38' min="10" max="50" step="0.5">
             </div>
-            <div class="input-group full-width">
-              <label><i class="fas fa-tag"></i> O ingresa medida completa</label>
-              <input type="text" id="medidaCompleta" placeholder="Ej: 295/80R22.5, 18.4-38, 480/70R34">
+            <div class="input-group">
+              <label><i class="fas fa-barcode"></i> Medida completa</label>
+              <input type="text" id="medidaCompleta" placeholder="Ej: 480/70R34 o 18.4-38">
             </div>
           </div>
         </div>
@@ -258,17 +316,17 @@
             <div class="input-group full-width">
               <label><i class="fas fa-tractor"></i> Tipo de vehículo</label>
               <select id="tipoVehiculo">
-                <option value="">Seleccionar tipo</option>
-                <option value="tractor">Tractor agrícola</option>
+                <option value="">Seleccioná el tipo</option>
+                <option value="tractor">Tractor</option>
                 <option value="cosechadora">Cosechadora</option>
-                <option value="camion">Camión / Ruta</option>
-                <option value="implemento">Implemento / Remolque</option>
+                <option value="camion">Camión / Semi</option>
+                <option value="implemento">Implemento agrícola</option>
                 <option value="camioneta">Camioneta 4x4</option>
               </select>
             </div>
             <div class="input-group full-width">
-              <label><i class="fas fa-industry"></i> Marca / Modelo (opcional)</label>
-              <input type="text" id="modeloVehiculo" placeholder="Ej: John Deere, New Holland, Mercedes Benz">
+              <label><i class="fas fa-edit"></i> Modelo / Marca del vehículo (opcional)</label>
+              <input type="text" id="modeloVehiculo" placeholder="Ej: John Deere 6130J">
             </div>
           </div>
         </div>
@@ -394,20 +452,27 @@
         <p>Especialistas en neumáticos agro y vial. Calidad y servicio en Allen, Río Negro.</p>
         <div class="social-links">
           <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://instagram.com/brevireumaticos" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://instagram.com/brevi.neumaticos" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
           <a href="https://wa.me/5492984287176" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
           <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
         </div>
       </div>
       <div class="footer-col">
         <h4>Enlaces rápidos</h4>
-        <ul><li><a href="#inicio">Inicio</a></li><li><a href="#nosotros">Nosotros</a></li><li><a href="#servicios">Servicios</a></li><li><a href="#buscador">Buscador</a></li><li><a href="#contacto">Contacto</a></li></ul>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#buscador">Buscador</a></li>
+          <li><a href="#promociones">Promociones</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
       </div>
       <div class="footer-col">
         <h4>Contacto</h4>
         <p><i class="fas fa-map-marker-alt"></i> Av. Julio A. Roca 955, Allen, Río Negro</p>
         <p><i class="fab fa-whatsapp"></i> +54 9 298 4287176</p>
-        <p><i class="far fa-envelope"></i> ventas@brevireumaticos.com</p>
+        <p><i class="far fa-envelope"></i> ventas@brevineumaticos.com</p>
       </div>
       <div class="footer-col">
         <h4>Ubicación</h4>
