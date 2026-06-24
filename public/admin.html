@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Brevi Neumáticos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--border:rgba(255,255,255,0.07);
+      --amarillo:#f5a623;--amarillo-dark:#d4881e;--rojo:#c0392b;--verde:#27ae60;
+      --texto:#e0e0e0;--gris:#888;--radius:6px;--font-display:'Bebas Neue','Barlow Condensed',sans-serif;--font-heading:'Oswald','Barlow Condensed',sans-serif;
+    }
+    body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--texto);min-height:100vh;}
+
+    /* LOGIN */
+    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 60% 40%,rgba(245,166,35,0.08) 0%,transparent 60%),var(--bg);}
+    .login-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--amarillo);padding:48px 40px;width:100%;max-width:400px;border-radius:var(--radius);}
+    .login-logo{font-family:var(--font-display);font-size:32px;font-weight:400;text-transform:uppercase;letter-spacing:1px;color:#fff;margin-bottom:8px;}
+    .login-logo span{color:var(--amarillo);}
+    .login-subtitle{color:var(--gris);font-size:13px;margin-bottom:36px;letter-spacing:2px;text-transform:uppercase;}
+    .field{margin-bottom:20px;}
+    .field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gris);margin-bottom:8px;}
+    .field input{width:100%;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);color:#fff;font-family:'Barlow',sans-serif;font-size:15px;transition:border-color 0.2s;}
+    .field input:focus{outline:none;border-color:var(--amarillo);}
+    .btn-login{width:100%;padding:14px;background:var(--amarillo);color:#000;border:none;border-radius:var(--radius);font-family:var(--font-heading);font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:2px;cursor:pointer;transition:background 0.2s,transform 0.1s;}
+    .btn-login:hover{background:var(--amarillo-dark);}
+    .login-error{color:var(--rojo);font-size:13px;margin-top:12px;text-align:center;min-height:20px;}
+
+    /* PANEL */
+    #adminPanel{display:none;}
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;height:60px;}
+    .topbar-brand{font-family:var(--font-display);font-size:26px;font-weight:400;text-transform:uppercase;color:#fff;}
+    .topbar-brand span{color:var(--amarillo);}
+    .topbar-right{display:flex;align-items:center;gap:16px;}
+    .badge-admin{background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);color:var(--amarillo);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;}
+    .btn-logout{background:transparent;border:1px solid var(--border);color:var(--gris);padding:8px 16px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-family:'Barlow',sans-serif;display:flex;align-items:center;gap:6px;transition:all 0.2s;white-space:nowrap;}
+    .btn-logout:hover{border-color:var(--rojo);color:var(--rojo);}
+
+    /* LAYOUT */
+    .admin-layout{display:flex;min-height:calc(100vh - 60px);}
+
+    /* SIDEBAR */
+    .sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);padding:24px 0;flex-shrink:0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;}
+    .sidebar-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gris);padding:0 20px;margin-bottom:8px;margin-top:20px;}
+    .sidebar-label:first-child{margin-top:0;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;color:var(--gris);font-size:14px;cursor:pointer;transition:all 0.15s;border-left:3px solid transparent;}
+    .nav-item:hover{color:#fff;background:rgba(255,255,255,0.04);}
+    .nav-item.active{color:var(--amarillo);border-left-color:var(--amarillo);background:rgba(245,166,35,0.06);}
+    .nav-item i{width:16px;text-align:center;font-size:13px;}
+
+    /* MAIN */
+    .main-content{flex:1;padding:32px;min-width:0;}
+
+    /* SECTION PANELS */
+    .section-panel{display:none;}
+    .section-panel.active{display:block;}
+
+    .page-header{margin-bottom:28px;}
+    .page-title{font-family:var(--font-display);font-size:38px;font-weight:400;text-transform:uppercase;color:#fff;margin-bottom:4px;}
+    .page-title span{color:var(--amarillo);}
+    .page-subtitle{color:var(--gris);font-size:14px;}
+
+    /* CARDS */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px;}
+    .card-title{font-family:var(--font-heading);font-size:18px;font-weight:600;text-transform:uppercase;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);padding-bottom:14px;}
+    .card-title i{color:var(--amarillo);}
+    .card-title span{border-top:3px solid var(--amarillo);}
+
+    /* FORM */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .form-group{display:flex;flex-direction:column;gap:6px;}
+    .form-group.full{grid-column:1/-1;}
+    .form-group label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gris);}
+    .form-group input,.form-group textarea,.form-group select{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;color:#fff;font-family:'Barlow',sans-serif;font-size:14px;transition:border-color 0.2s;width:100%;}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--amarillo);}
+    .form-group textarea{resize:vertical;min-height:80px;}
+    .form-group select option{background:var(--surface2);}
+    .form-actions{margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+    .form-status{font-size:13px;min-height:20px;}
+    .form-status.success{color:var(--verde);}
+    .form-status.error{color:var(--rojo);}
+
+    /* BUTTONS */
+    .btn-primary{background:var(--amarillo);color:#000;border:none;padding:11px 24px;border-radius:var(--radius);font-family:var(--font-heading);font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:1px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background 0.2s;}
+    .btn-primary:hover{background:var(--amarillo-dark);}
+    .btn-secondary{background:transparent;color:var(--gris);border:1px solid var(--border);padding:11px 20px;border-radius:var(--radius);font-family:'Barlow',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s;}
+    .btn-secondary:hover{border-color:var(--gris);color:#fff;}
+    .btn-danger{background:var(--rojo);color:#fff;border:none;padding:10px 24px;border-radius:var(--radius);font-family:var(--font-heading);font-size:15px;font-weight:600;text-transform:uppercase;cursor:pointer;transition:background 0.2s;}
+    .btn-danger:hover{background:#962d22;}
+    .btn-icon{width:34px;height:34px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.2s;color:var(--gris);}
+    .btn-icon:hover{border-color:rgba(245,166,35,0.5);color:var(--amarillo);background:rgba(245,166,35,0.08);}
+    .btn-icon.danger:hover{border-color:rgba(192,57,43,0.5);color:var(--rojo);background:rgba(192,57,43,0.08);}
+
+    /* PROMO LIST */
+    .list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+    .list-title{font-family:var(--font-heading);font-size:20px;font-weight:600;text-transform:uppercase;color:#fff;}
+    .count-badge{background:var(--surface2);border:1px solid var(--border);color:var(--gris);padding:3px 12px;border-radius:20px;font-size:12px;}
+    .promo-list{display:flex;flex-direction:column;gap:10px;}
+    .promo-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:grid;grid-template-columns:36px 1fr auto;gap:16px;align-items:center;transition:border-color 0.2s;}
+    .promo-item:hover{border-color:rgba(245,166,35,0.3);}
+    .promo-item.inactive{opacity:0.5;}
+    .promo-orden{width:36px;height:36px;background:var(--surface2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-weight:700;font-size:18px;color:var(--amarillo);flex-shrink:0;}
+    .promo-info h4{font-weight:600;font-size:15px;color:#fff;margin-bottom:3px;}
+    .promo-info p{font-size:12px;color:var(--gris);margin-bottom:5px;}
+    .promo-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .tag{padding:2px 10px;border-radius:20px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+    .tag-active{background:rgba(39,174,96,0.15);color:var(--verde);border:1px solid rgba(39,174,96,0.3);}
+    .tag-inactive{background:rgba(255,255,255,0.05);color:var(--gris);border:1px solid var(--border);}
+    .tag-price{background:rgba(245,166,35,0.12);color:var(--amarillo);border:1px solid rgba(245,166,35,0.25);}
+    .promo-actions{display:flex;gap:6px;flex-shrink:0;}
+    .loading-state{text-align:center;padding:60px 20px;color:var(--gris);}
+    .loading-spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--amarillo);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .empty-state{text-align:center;padding:50px 20px;color:var(--gris);background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);}
+    .empty-state i{font-size:36px;color:var(--amarillo);margin-bottom:12px;display:block;}
+
+    /* IMAGE UPLOADER */
+    .img-upload-box{border:2px dashed rgba(255,255,255,0.15);border-radius:10px;padding:24px 20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;background:rgba(255,255,255,0.03);min-height:110px;display:flex;align-items:center;justify-content:center;position:relative;}
+    .img-upload-box:hover{border-color:var(--amarillo);background:rgba(255,200,0,0.04);}
+    #imgPlaceholder{display:flex;flex-direction:column;align-items:center;}
+    #imgPreview{position:relative;display:inline-block;}
+    .btn-quitar-img{position:absolute;top:-10px;right:-10px;background:var(--rojo);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;}
+    .upload-spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--amarillo);border-radius:50%;animation:spin 0.8s linear infinite;}
+
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--rojo);border-radius:var(--radius);padding:32px;max-width:420px;width:90%;}
+    .modal h3{font-family:var(--font-display);font-size:26px;font-weight:400;text-transform:uppercase;color:#fff;margin-bottom:12px;}
+    .modal p{color:var(--gris);font-size:14px;margin-bottom:24px;}
+    .modal-actions{display:flex;gap:12px;justify-content:flex-end;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--verde);padding:14px 20px;border-radius:var(--radius);font-size:14px;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,0.5);transform:translateY(80px);opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:9999;display:flex;align-items:center;gap:10px;max-width:320px;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.error{border-left-color:var(--rojo);}
+
+    /* STATS */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px;}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;}
+    .stat-num{font-family:var(--font-display);font-size:42px;font-weight:400;color:var(--amarillo);}
+    .stat-label{font-size:12px;color:var(--gris);margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+
+    /* INFO SECTION */
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .info-item{display:flex;flex-direction:column;gap:6px;}
+    .info-item label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gris);}
+    .info-item input,.info-item textarea,.info-item select{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;color:#fff;font-family:'Barlow',sans-serif;font-size:14px;transition:border-color 0.2s;width:100%;}
+    .info-item input:focus,.info-item textarea:focus{outline:none;border-color:var(--amarillo);}
+    .info-item.full{grid-column:1/-1;}
+    .info-item textarea{resize:vertical;min-height:80px;}
+
+    /* HORARIOS */
+    .horario-row{display:grid;grid-template-columns:160px 1fr 1fr 40px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+    .horario-row:last-child{border-bottom:none;}
+    .horario-day{font-size:14px;color:#fff;font-weight:500;}
+    .btn-add-row{background:transparent;border:1px dashed var(--border);color:var(--gris);padding:8px;border-radius:var(--radius);cursor:pointer;font-size:13px;width:100%;margin-top:10px;transition:all 0.2s;}
+    .btn-add-row:hover{border-color:var(--amarillo);color:var(--amarillo);}
+
+    /* REDES */
+    .redes-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .red-item{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;}
+    .red-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
+    .red-icon.fa-instagram{color:#e1306c;}
+    .red-icon.fa-facebook-f{color:#1877f2;}
+    .red-icon.fa-whatsapp{color:#25d366;}
+    .red-icon.fa-tiktok{color:#fff;}
+    .red-item input{background:transparent;border:none;color:#fff;font-family:'Barlow',sans-serif;font-size:14px;flex:1;outline:none;}
+    .red-item input::placeholder{color:var(--gris);}
+
+    /* GALERÍA */
+    .galeria-grid-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
+    .galeria-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color 0.2s;}
+    .galeria-card:hover{border-color:rgba(245,166,35,0.35);}
+    .galeria-card.inactive{opacity:0.45;}
+    .galeria-thumb-wrap{position:relative;aspect-ratio:4/3;background:var(--surface2);}
+    .galeria-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+    .galeria-card-body{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .galeria-card-info{min-width:0;}
+    .galeria-card-info p{font-size:12px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .galeria-card-info span{font-size:11px;color:var(--gris);}
+    .galeria-card-actions{display:flex;gap:4px;flex-shrink:0;}
+
+    /* RESPONSIVE */
+    @media(max-width:1024px){
+      .sidebar{width:180px;}
+      .main-content{padding:24px 20px;}
+    }
+    @media(max-width:768px){
+      .sidebar{display:none;}
+      .main-content{padding:16px 14px;}
+      .form-grid,.info-grid,.redes-grid{grid-template-columns:1fr;}
+      .form-group.full,.info-item.full{grid-column:1;}
+      .promo-item{grid-template-columns:1fr auto;}
+      .promo-orden{display:none;}
+      .stats-grid{grid-template-columns:1fr 1fr;}
+      .topbar{padding:0 16px;}
+      .topbar-brand{font-size:18px;}
+      .badge-admin{display:none;}
+      .btn-logout span{display:none;}
+      .card{padding:18px 14px;}
+      .page-title{font-size:26px;}
+      .modal{padding:22px 18px;}
+      .galeria-grid-admin{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+      .horario-row{grid-template-columns:110px 1fr 1fr 36px;gap:6px;}
+      .horario-day{font-size:13px;}
+      /* Form actions stack on mobile */
+      .form-actions{flex-direction:column;align-items:stretch;}
+      .form-actions .btn-primary,.form-actions .btn-secondary{justify-content:center;text-align:center;}
+    }
+    @media(max-width:480px){
+      .stats-grid{grid-template-columns:1fr 1fr;}
+      .stat-num{font-size:28px;}
+      .topbar{height:52px;}
+      .main-content{padding:12px 12px;}
+      .redes-grid{grid-template-columns:1fr;}
+      .promo-item{grid-template-columns:1fr auto;padding:12px 14px;}
+      .galeria-grid-admin{grid-template-columns:repeat(2,1fr);}
+    }
+
+    /* MOBILE NAV */
+    .mobile-nav{display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;overflow-x:auto;gap:8px;}
+    .mobile-nav-btn{background:transparent;border:1px solid var(--border);color:var(--gris);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;white-space:nowrap;transition:all 0.2s;font-family:'Barlow',sans-serif;}
+    .mobile-nav-btn.active{background:rgba(245,166,35,0.15);border-color:var(--amarillo);color:var(--amarillo);}
+    @media(max-width:768px){.mobile-nav{display:flex;}}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">Brevi <span>Neumáticos</span></div>
+    <div class="login-subtitle">Panel de administración</div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="emailInput" placeholder="tucorreo@email.com" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="passwordInput" placeholder="Ingresá tu contraseña" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="login()"><i class="fas fa-lock" style="margin-right:8px;"></i>Ingresar</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div id="adminPanel">
+
+  <div class="topbar">
+    <div class="topbar-brand">Brevi <span>Admin</span></div>
+    <div class="topbar-right">
+      <a href="https://brevi-neumaticos.web.app/" target="_blank" class="btn-secondary" style="font-size:12px;padding:6px 14px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+        <i class="fas fa-external-link-alt"></i> Ver sitio
+      </a>
+      <span class="badge-admin"><i class="fas fa-shield-alt" style="margin-right:5px;"></i>Admin</span>
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <button class="mobile-nav-btn active" onclick="showSection('dashboard')">📊 Inicio</button>
+    <button class="mobile-nav-btn" onclick="showSection('promociones')">🏷️ Promociones</button>
+    <button class="mobile-nav-btn" onclick="showSection('galeria')">🖼️ Galería</button>
+    <button class="mobile-nav-btn" onclick="showSection('negocio')">🏪 Negocio</button>
+    <button class="mobile-nav-btn" onclick="showSection('horarios')">🕐 Horarios</button>
+    <button class="mobile-nav-btn" onclick="showSection('redes')">📱 Redes</button>
+    <button class="mobile-nav-btn" onclick="showSection('whatsapp')">💬 WhatsApp</button>
+  </div>
+
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-label">General</div>
+      <div class="nav-item active" onclick="showSection('dashboard')"><i class="fas fa-chart-bar"></i> Dashboard</div>
+
+      <div class="sidebar-label">Contenido</div>
+      <div class="nav-item" onclick="showSection('promociones')"><i class="fas fa-tag"></i> Promociones</div>
+      <div class="nav-item" onclick="showSection('galeria')"><i class="fas fa-images"></i> Galería</div>
+      <div class="nav-item" onclick="showSection('whatsapp')"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+
+      <div class="sidebar-label">Información</div>
+      <div class="nav-item" onclick="showSection('negocio')"><i class="fas fa-store"></i> Info del negocio</div>
+      <div class="nav-item" onclick="showSection('horarios')"><i class="fas fa-clock"></i> Horarios</div>
+      <div class="nav-item" onclick="showSection('redes')"><i class="fas fa-share-alt"></i> Redes sociales</div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="main-content">
+
+      <!-- ═══ DASHBOARD ═══ -->
+      <div class="section-panel active" id="panel-dashboard">
+        <div class="page-header">
+          <div class="page-title">Panel de <span>Control</span></div>
+          <div class="page-subtitle">Bienvenido al panel de administración de Brevi Neumáticos.</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Publicaciones totales</div></div>
+          <div class="stat-card"><div class="stat-num" id="statActivas">—</div><div class="stat-label">Activas</div></div>
+          <div class="stat-card"><div class="stat-num" id="statBanners">—</div><div class="stat-label">Banners</div></div>
+          <div class="stat-card"><div class="stat-num" id="statOfertas">—</div><div class="stat-label">Ofertas</div></div>
+          <div class="stat-card"><div class="stat-num" id="statGaleria">—</div><div class="stat-label">Fotos en galería</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-rocket"></i> Accesos rápidos</div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <button class="btn-primary" onclick="showSection('promociones')"><i class="fas fa-plus"></i> Nueva publicación</button>
+            <button class="btn-secondary" onclick="showSection('negocio')"><i class="fas fa-store"></i> Editar info del negocio</button>
+            <button class="btn-secondary" onclick="showSection('redes')"><i class="fas fa-share-alt"></i> Editar redes sociales</button>
+            <a href="https://brevi-neumaticos.web.app/" target="_blank" class="btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;"><i class="fas fa-eye"></i> Ver sitio</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ PROMOCIONES ═══ -->
+      <div class="section-panel" id="panel-promociones">
+        <div class="page-header">
+          <div class="page-title">Gestión de <span>Publicaciones</span></div>
+          <div class="page-subtitle">Banners de promociones y ofertas del sitio.</div>
+        </div>
+
+        <!-- FORMULARIO -->
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-plus-circle"></i>
+            <span id="formTitle">Nueva publicación</span>
+          </div>
+          <input type="hidden" id="editId">
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Tipo *</label>
+              <select id="fTipo" onchange="toggleTipo()">
+                <option value="oferta">🏷️ Oferta con precio (banner + tarjeta)</option>
+                <option value="banner">🖼️ Banner informativo (solo imagen + texto, sin tarjeta)</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Título *</label>
+              <input type="text" id="fTitulo" placeholder="Ej: 20% OFF en toda la línea">
+            </div>
+            <div class="form-group">
+              <label>Texto destacado (grande)</label>
+              <input type="text" id="fDestacado" placeholder="Ej: Pirelli Agro">
+            </div>
+            <div class="form-group">
+              <label>Etiqueta / Tag</label>
+              <input type="text" id="fTag" placeholder="Ej: 🔥 Oferta del mes">
+            </div>
+            <div class="form-group full">
+              <label>Descripción</label>
+              <textarea id="fDescripcion" placeholder="Descripción breve..."></textarea>
+            </div>
+            <div class="form-group full">
+              <label>Imagen</label>
+              <div class="img-upload-box" id="imgUploadBox" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="subirImagen(this)">
+                <div id="imgPreview" style="display:none;">
+                  <img id="imgPreviewImg" src="" alt="preview" style="max-height:150px;max-width:100%;border-radius:8px;object-fit:contain;">
+                  <button type="button" onclick="event.stopPropagation();quitarImagen()" class="btn-quitar-img" title="Quitar">✕</button>
+                </div>
+                <div id="imgPlaceholder">
+                  <i class="fas fa-cloud-upload-alt" style="font-size:28px;color:var(--amarillo);margin-bottom:8px;"></i>
+                  <p style="margin:0;font-weight:600;color:#fff;font-size:14px;">Clic para subir imagen</p>
+                  <p style="margin:4px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">JPG, PNG, WEBP — máx. 10MB</p>
+                </div>
+                <div id="imgUploadProgress" style="display:none;flex-direction:column;align-items:center;gap:8px;">
+                  <div class="upload-spinner"></div>
+                  <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.6);">Subiendo...</p>
+                </div>
+              </div>
+              <input type="hidden" id="fImagen">
+            </div>
+
+            <!-- Solo para ofertas -->
+            <div id="camposOferta" class="form-group full" style="padding:0;margin:0;">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Precio actual</label>
+                  <input type="text" id="fPrecio" placeholder="Ej: $180.000 o Consultar">
+                </div>
+                <div class="form-group">
+                  <label>Precio anterior (tachado)</label>
+                  <input type="text" id="fPrecioAnterior" placeholder="Ej: $225.000">
+                </div>
+                <div class="form-group">
+                  <label>Badge de descuento</label>
+                  <input type="text" id="fDescuento" placeholder="Ej: 20% OFF">
+                </div>
+                <div class="form-group">
+                  <label>Texto WhatsApp</label>
+                  <input type="text" id="fWhatsappTexto" placeholder="Ej: Consulto por el 20% OFF Pirelli">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Orden</label>
+              <input type="number" id="fOrden" placeholder="1, 2, 3..." min="1" value="1">
+            </div>
+            <div class="form-group">
+              <label>Estado</label>
+              <select id="fActiva">
+                <option value="true">✅ Activa</option>
+                <option value="false">⏸ Inactiva</option>
+              </select>
+            </div>
+            <input type="hidden" id="fEsBanner" value="true">
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-primary" onclick="guardarPromo()">
+              <i class="fas fa-save"></i> <span id="btnGuardarText">Guardar</span>
+            </button>
+            <button class="btn-secondary" id="btnCancelar" onclick="cancelarEdicion()" style="display:none;">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <span class="form-status" id="formStatus"></span>
+          </div>
+        </div>
+
+        <!-- LISTA -->
+        <div>
+          <div class="list-header">
+            <div class="list-title">Publicaciones <span class="count-badge" id="promosCount">0</span></div>
+          </div>
+          <div id="promosList">
+            <div class="loading-state"><div class="loading-spinner"></div><p>Cargando...</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ GALERÍA ═══ -->
+      <div class="section-panel" id="panel-galeria">
+        <div class="page-header">
+          <div class="page-title">Gestión de <span>Galería</span></div>
+          <div class="page-subtitle">Fotos del local, taller y trabajos realizados que se muestran en el sitio.</div>
+        </div>
+
+        <!-- FORMULARIO -->
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-plus-circle"></i>
+            <span id="formTitleGaleria">Nueva foto</span>
+          </div>
+          <input type="hidden" id="editIdGaleria">
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Imagen *</label>
+              <div class="img-upload-box" id="imgUploadBoxG" onclick="document.getElementById('fileInputG').click()">
+                <input type="file" id="fileInputG" accept="image/*" style="display:none" onchange="subirImagenGaleria(this)">
+                <div id="imgPreviewG" style="display:none;">
+                  <img id="imgPreviewImgG" src="" alt="preview" style="max-height:150px;max-width:100%;border-radius:8px;object-fit:contain;">
+                  <button type="button" onclick="event.stopPropagation();quitarImagenGaleria()" class="btn-quitar-img" title="Quitar">✕</button>
+                </div>
+                <div id="imgPlaceholderG">
+                  <i class="fas fa-cloud-upload-alt" style="font-size:28px;color:var(--amarillo);margin-bottom:8px;"></i>
+                  <p style="margin:0;font-weight:600;color:#fff;font-size:14px;">Clic para subir imagen</p>
+                  <p style="margin:4px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">JPG, PNG, WEBP — máx. 10MB</p>
+                </div>
+                <div id="imgUploadProgressG" style="display:none;flex-direction:column;align-items:center;gap:8px;">
+                  <div class="upload-spinner"></div>
+                  <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.6);">Subiendo...</p>
+                </div>
+              </div>
+              <input type="hidden" id="fImagenG">
+            </div>
+            <div class="form-group full">
+              <label>Descripción / Pie de foto (opcional)</label>
+              <input type="text" id="fTituloG" placeholder="Ej: Taller de montaje y balanceo">
+            </div>
+            <div class="form-group">
+              <label>Orden</label>
+              <input type="number" id="fOrdenG" placeholder="1, 2, 3..." min="1" value="1">
+            </div>
+            <div class="form-group">
+              <label>Estado</label>
+              <select id="fActivaG">
+                <option value="true">✅ Visible en el sitio</option>
+                <option value="false">⏸ Oculta</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-primary" onclick="guardarGaleria()">
+              <i class="fas fa-save"></i> <span id="btnGuardarTextGaleria">Guardar</span>
+            </button>
+            <button class="btn-secondary" id="btnCancelarGaleria" onclick="cancelarEdicionGaleria()" style="display:none;">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+            <span class="form-status" id="formStatusGaleria"></span>
+          </div>
+        </div>
+
+        <!-- GRILLA -->
+        <div>
+          <div class="list-header">
+            <div class="list-title">Fotos <span class="count-badge" id="galeriaAdminCount">0</span></div>
+          </div>
+          <div id="galeriaList">
+            <div class="loading-state"><div class="loading-spinner"></div><p>Cargando...</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ WHATSAPP ═══ -->
+      <div class="section-panel" id="panel-whatsapp">
+        <div class="page-header">
+          <div class="page-title">Config. <span>WhatsApp</span></div>
+          <div class="page-subtitle">Número y mensajes predeterminados del sitio.</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fab fa-whatsapp"></i> Número de WhatsApp</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Número (con código de país, sin +)</label>
+              <input type="text" id="cfgWhatsapp" placeholder="5492984287176">
+            </div>
+            <div class="form-group">
+              <label>Mensaje de bienvenida (botón flotante)</label>
+              <input type="text" id="cfgMsgBienvenida" placeholder="Hola! Consulto por neumáticos...">
+            </div>
+            <div class="form-group full">
+              <label>Mensaje del buscador (cuando busca sin completar medida)</label>
+              <textarea id="cfgMsgBuscador" placeholder="Hola! Consulto por neumáticos PIRELLI..."></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-primary" onclick="guardarConfig('whatsapp')"><i class="fas fa-save"></i> Guardar</button>
+            <span class="form-status" id="statusWhatsapp"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ NEGOCIO ═══ -->
+      <div class="section-panel" id="panel-negocio">
+        <div class="page-header">
+          <div class="page-title">Info del <span>Negocio</span></div>
+          <div class="page-subtitle">Datos que aparecen en el sitio y el pie de página.</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-store"></i> Datos del negocio</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Nombre del negocio</label>
+              <input type="text" id="cfgNombre" placeholder="Brevi Neumáticos">
+            </div>
+            <div class="info-item">
+              <label>Email de contacto</label>
+              <input type="email" id="cfgEmail" placeholder="ventas@brevineumaticos.com">
+            </div>
+            <div class="info-item">
+              <label>Teléfono fijo</label>
+              <input type="text" id="cfgTelefono" placeholder="+54 0298 445-1000">
+            </div>
+            <div class="info-item">
+              <label>WhatsApp</label>
+              <input type="text" id="cfgWaNegocio" placeholder="+54 9 298 4287176">
+            </div>
+            <div class="info-item full">
+              <label>Dirección</label>
+              <input type="text" id="cfgDireccion" placeholder="Av. Julio A. Roca 955, Allen, Río Negro">
+            </div>
+            <div class="info-item full">
+              <label>Descripción corta (footer)</label>
+              <textarea id="cfgDescripcion" placeholder="Especialistas en neumáticos agro y vial..."></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-primary" onclick="guardarConfig('negocio')"><i class="fas fa-save"></i> Guardar</button>
+            <span class="form-status" id="statusNegocio"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ HORARIOS ═══ -->
+      <div class="section-panel" id="panel-horarios">
+        <div class="page-header">
+          <div class="page-title">Horarios de <span>Atención</span></div>
+          <div class="page-subtitle">Se muestran en la sección de contacto del sitio.</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-clock"></i> Horarios</div>
+          <div id="horariosContainer">
+            <div class="horario-row" style="font-size:11px;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:1px;padding-bottom:8px;">
+              <div>Día / Rango</div><div>Desde</div><div>Hasta</div><div></div>
+            </div>
+          </div>
+          <button class="btn-add-row" onclick="agregarHorario()"><i class="fas fa-plus"></i> Agregar fila</button>
+          <div class="form-actions" style="margin-top:20px;">
+            <button class="btn-primary" onclick="guardarConfig('horarios')"><i class="fas fa-save"></i> Guardar horarios</button>
+            <span class="form-status" id="statusHorarios"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ REDES ═══ -->
+      <div class="section-panel" id="panel-redes">
+        <div class="page-header">
+          <div class="page-title">Redes <span>Sociales</span></div>
+          <div class="page-subtitle">Links que aparecen en el footer y la sección de contacto.</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-share-alt"></i> Links de redes</div>
+          <div class="redes-grid">
+            <div class="red-item">
+              <i class="fab fa-instagram red-icon"></i>
+              <input type="url" id="redInstagram" placeholder="https://instagram.com/tu-usuario">
+            </div>
+            <div class="red-item">
+              <i class="fab fa-facebook-f red-icon"></i>
+              <input type="url" id="redFacebook" placeholder="https://facebook.com/tu-pagina">
+            </div>
+            <div class="red-item">
+              <i class="fab fa-whatsapp red-icon"></i>
+              <input type="text" id="redWhatsapp" placeholder="5492984287176 (sin +)">
+            </div>
+            <div class="red-item">
+              <i class="fab fa-tiktok red-icon"></i>
+              <input type="url" id="redTiktok" placeholder="https://tiktok.com/@tu-usuario">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-primary" onclick="guardarConfig('redes')"><i class="fas fa-save"></i> Guardar</button>
+            <span class="form-status" id="statusRedes"></span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-content -->
+  </div><!-- /admin-layout -->
+</div><!-- /adminPanel -->
+
+<!-- MODAL ELIMINAR -->
+<div class="modal-overlay" id="modalEliminar">
+  <div class="modal">
+    <h3 id="modalEliminarTitulo">Eliminar publicación</h3>
+    <p>Esta acción no se puede deshacer. ¿Estás seguro?</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn-danger" onclick="confirmarEliminar()"><i class="fas fa-trash"></i> Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+  // ── FIREBASE ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyBZtUa8TyHCjpBFISkSUGl0hKTGS06_UAA",
+    authDomain: "brevi-neumaticos.firebaseapp.com",
+    projectId: "brevi-neumaticos",
+    storageBucket: "brevi-neumaticos.firebasestorage.app",
+    messagingSenderId: "126173922281",
+    appId: "1:126173922281:web:46863b73abc7085f128178"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // ── CLOUDINARY ──
+  const CLOUDINARY_CLOUD  = 'dgfzrwlkd';
+  const CLOUDINARY_PRESET = 'brevi-baner';
+
+  // ── ESTADO ──
+  let deleteTargetId = null;
+  let deleteTargetTipo = 'promociones';
+  let toastTimer = null;
+
+  // ── AUTH ──
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').style.display  = 'block';
+      cargarOfertas();
+      cargarStats();
+      cargarConfigUI();
+      cargarHorariosUI();
+      cargarGaleria();
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('adminPanel').style.display  = 'none';
+    }
+  });
+
+  function login() {
+    const email = document.getElementById('emailInput').value.trim();
+    const pass  = document.getElementById('passwordInput').value;
+    const errorEl = document.getElementById('loginError');
+    errorEl.textContent = '';
+    if (!email || !pass) { errorEl.textContent = 'Completá email y contraseña.'; return; }
+    firebase.auth().signInWithEmailAndPassword(email, pass)
+      .catch(err => {
+        errorEl.textContent = ['auth/invalid-credential','auth/wrong-password','auth/user-not-found'].includes(err.code)
+          ? 'Email o contraseña incorrectos.' : 'Error: ' + err.message;
+      });
+  }
+  function logout() { firebase.auth().signOut(); }
+
+  document.getElementById('emailInput').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('passwordInput').focus(); });
+  document.getElementById('passwordInput').addEventListener('keydown', e => { if(e.key==='Enter') login(); });
+
+  // ── NAVEGACIÓN ──
+  function showSection(id) {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    document.querySelector(`.nav-item[onclick="showSection('${id}')"]`)?.classList.add('active');
+    document.querySelector(`.mobile-nav-btn[onclick="showSection('${id}')"]`)?.classList.add('active');
+  }
+
+  // ── STATS ──
+  async function cargarStats() {
+    try {
+      const snap = await db.collection('promociones').get();
+      const total = snap.size;
+      let activas = 0, banners = 0, ofertas = 0;
+      snap.forEach(doc => {
+        const d = doc.data();
+        if (d.activa) activas++;
+        if (d.tipo === 'banner') banners++;
+        else ofertas++;
+      });
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statActivas').textContent = activas;
+      document.getElementById('statBanners').textContent = banners;
+      document.getElementById('statOfertas').textContent = ofertas;
+    } catch(e) {}
+
+    try {
+      const snapG = await db.collection('galeria').get();
+      document.getElementById('statGaleria').textContent = snapG.size;
+    } catch(e) {}
+  }
+
+  // ── IMAGEN ──
+  async function subirImagen(input) {
+    const file = input.files[0];
+    if (!file) return;
+    document.getElementById('imgPlaceholder').style.display = 'none';
+    document.getElementById('imgPreview').style.display = 'none';
+    document.getElementById('imgUploadProgress').style.display = 'flex';
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', CLOUDINARY_PRESET);
+      const res = await fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', { method:'POST', body:fd });
+      if (!res.ok) throw new Error('Error al subir');
+      const data = await res.json();
+      document.getElementById('fImagen').value = data.secure_url;
+      document.getElementById('imgPreviewImg').src = data.secure_url;
+      document.getElementById('imgUploadProgress').style.display = 'none';
+      document.getElementById('imgPreview').style.display = 'block';
+      document.getElementById('imgUploadBox').style.cursor = 'default';
+    } catch(err) {
+      document.getElementById('imgUploadProgress').style.display = 'none';
+      document.getElementById('imgPlaceholder').style.display = 'flex';
+      showToast('Error al subir imagen.', true);
+    }
+  }
+
+  function quitarImagen() {
+    document.getElementById('fImagen').value = '';
+    document.getElementById('imgPreviewImg').src = '';
+    document.getElementById('imgPreview').style.display = 'none';
+    document.getElementById('imgPlaceholder').style.display = 'flex';
+    document.getElementById('imgUploadBox').style.cursor = 'pointer';
+    document.getElementById('fileInput').value = '';
+  }
+
+  // ── FORM TIPO ──
+  function toggleTipo() {
+    const tipo = document.getElementById('fTipo').value;
+    document.getElementById('camposOferta').style.display = tipo === 'oferta' ? 'block' : 'none';
+  }
+
+  // ── GUARDAR PROMO ──
+  async function guardarPromo() {
+    const titulo = document.getElementById('fTitulo').value.trim();
+    const tipo   = document.getElementById('fTipo').value;
+    if (!titulo) { setStatus('El título es obligatorio.', 'error'); return; }
+
+    const datos = {
+      tipo,
+      titulo,
+      destacado:    document.getElementById('fDestacado').value.trim() || null,
+      tag:          document.getElementById('fTag').value.trim() || null,
+      descripcion:  document.getElementById('fDescripcion').value.trim() || null,
+      imagen:       document.getElementById('fImagen').value.trim() || null,
+      precio:       tipo==='oferta' ? (document.getElementById('fPrecio').value.trim()||null) : null,
+      precioAnterior: tipo==='oferta' ? (document.getElementById('fPrecioAnterior').value.trim()||null) : null,
+      descuento:    tipo==='oferta' ? (document.getElementById('fDescuento').value.trim()||null) : null,
+      whatsappTexto:tipo==='oferta' ? (document.getElementById('fWhatsappTexto').value.trim()||null) : null,
+      esBanner:     true,
+      generaTarjeta: tipo==='oferta',
+      orden:        parseInt(document.getElementById('fOrden').value)||1,
+      activa:       document.getElementById('fActiva').value==='true',
+      updatedAt:    firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    const editId = document.getElementById('editId').value;
+    setStatus('Guardando...', '');
+    try {
+      if (editId) {
+        await db.collection('promociones').doc(editId).update(datos);
+        showToast('Publicación actualizada.');
+      } else {
+        datos.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('promociones').add(datos);
+        showToast('Publicación creada y visible en el sitio.');
+      }
+      limpiarFormulario();
+      cargarOfertas();
+      cargarStats();
+    } catch(err) { setStatus('Error: '+err.message,'error'); }
+  }
+
+  // ── CARGAR LISTA ──
+  async function cargarOfertas() {
+    const lista = document.getElementById('promosList');
+    const count = document.getElementById('promosCount');
+    lista.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Cargando...</p></div>';
+    try {
+      const snap = await db.collection('promociones').orderBy('orden','asc').get();
+      count.textContent = snap.size;
+      if (snap.empty) {
+        lista.innerHTML = '<div class="empty-state"><i class="fas fa-tag"></i><p>No hay publicaciones aún.</p></div>';
+        return;
+      }
+      lista.innerHTML = '<div class="promo-list">' + snap.docs.map(doc => renderPromoItem(doc.id, doc.data())).join('') + '</div>';
+    } catch(err) {
+      lista.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar. Verificá los permisos de Firestore.</p></div>';
+    }
+  }
+
+  function renderPromoItem(id, p) {
+    const activa = p.activa !== false;
+    const esBanner = p.tipo === 'banner';
+    return `
+      <div class="promo-item ${activa?'':'inactive'}">
+        <div class="promo-orden">${p.orden||'—'}</div>
+        <div class="promo-info">
+          <h4>${p.titulo||'Sin título'}</h4>
+          <p>${p.descripcion||''}</p>
+          <div class="promo-meta">
+            <span class="tag ${activa?'tag-active':'tag-inactive'}">${activa?'Activa':'Inactiva'}</span>
+            <span class="tag" style="background:rgba(245,166,35,0.1);color:var(--amarillo);border:1px solid rgba(245,166,35,0.25);">${esBanner?'🖼️ Banner':'🏷️ Oferta'}</span>
+            ${p.precio?`<span class="tag tag-price">${p.precio}</span>`:''}
+            ${p.descuento?`<span class="tag" style="background:rgba(192,57,43,0.1);color:#e74c3c;border:1px solid rgba(192,57,43,0.25);">${p.descuento}</span>`:''}
+          </div>
+        </div>
+        <div class="promo-actions">
+          <button class="btn-icon" title="Editar" onclick="editarPromo('${id}')"><i class="fas fa-pencil-alt"></i></button>
+          <button class="btn-icon" title="${activa?'Desactivar':'Activar'}" onclick="toggleActiva('${id}',${activa})"><i class="fas fa-${activa?'eye-slash':'eye'}"></i></button>
+          <button class="btn-icon danger" title="Eliminar" onclick="pedirEliminar('${id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`;
+  }
+
+  // ── EDITAR ──
+  async function editarPromo(id) {
+    try {
+      const doc = await db.collection('promociones').doc(id).get();
+      const p = doc.data();
+      document.getElementById('editId').value = id;
+      document.getElementById('fTipo').value = p.tipo||'oferta';
+      toggleTipo();
+      document.getElementById('fTitulo').value = p.titulo||'';
+      document.getElementById('fDestacado').value = p.destacado||'';
+      document.getElementById('fTag').value = p.tag||'';
+      document.getElementById('fDescripcion').value = p.descripcion||'';
+      document.getElementById('fPrecio').value = p.precio||'';
+      document.getElementById('fPrecioAnterior').value = p.precioAnterior||'';
+      document.getElementById('fDescuento').value = p.descuento||'';
+      document.getElementById('fWhatsappTexto').value = p.whatsappTexto||'';
+      const imgUrl = p.imagen||'';
+      document.getElementById('fImagen').value = imgUrl;
+      if (imgUrl) {
+        document.getElementById('imgPreviewImg').src = imgUrl;
+        document.getElementById('imgPreview').style.display = 'block';
+        document.getElementById('imgPlaceholder').style.display = 'none';
+        document.getElementById('imgUploadBox').style.cursor = 'default';
+      } else { quitarImagen(); }
+      document.getElementById('fOrden').value = p.orden||1;
+      document.getElementById('fActiva').value = p.activa!==false?'true':'false';
+      document.getElementById('formTitle').textContent = 'Editando publicación';
+      document.getElementById('btnGuardarText').textContent = 'Actualizar';
+      document.getElementById('btnCancelar').style.display = 'inline-flex';
+      showSection('promociones');
+      document.querySelector('.card').scrollIntoView({behavior:'smooth'});
+    } catch(err) { showToast('Error al cargar.',true); }
+  }
+
+  async function toggleActiva(id,estadoActual) {
+    try {
+      await db.collection('promociones').doc(id).update({activa:!estadoActual});
+      showToast(!estadoActual?'Publicación activada.':'Publicación desactivada.');
+      cargarOfertas(); cargarStats();
+    } catch(e) { showToast('Error.',true); }
+  }
+
+  function pedirEliminar(id, tipo='promociones') {
+    deleteTargetId = id;
+    deleteTargetTipo = tipo;
+    document.getElementById('modalEliminarTitulo').textContent = tipo === 'galeria' ? 'Eliminar foto' : 'Eliminar publicación';
+    document.getElementById('modalEliminar').classList.add('open');
+  }
+  function cerrarModal() { deleteTargetId=null; document.getElementById('modalEliminar').classList.remove('open'); }
+  async function confirmarEliminar() {
+    if (!deleteTargetId) return;
+    try {
+      await db.collection(deleteTargetTipo).doc(deleteTargetId).delete();
+      cerrarModal();
+      if (deleteTargetTipo === 'galeria') {
+        showToast('Foto eliminada.'); cargarGaleria(); cargarStats();
+      } else {
+        showToast('Publicación eliminada.'); cargarOfertas(); cargarStats();
+      }
+    } catch(e) { showToast('Error al eliminar.',true); }
+  }
+
+  function cancelarEdicion() { limpiarFormulario(); }
+  function limpiarFormulario() {
+    ['fTitulo','fDestacado','fTag','fDescripcion','fPrecio','fPrecioAnterior','fDescuento','fWhatsappTexto','fImagen','editId'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value='';
+    });
+    document.getElementById('fOrden').value='1';
+    document.getElementById('fActiva').value='true';
+    document.getElementById('fTipo').value='oferta';
+    toggleTipo(); quitarImagen();
+    document.getElementById('formTitle').textContent='Nueva publicación';
+    document.getElementById('btnGuardarText').textContent='Guardar';
+    document.getElementById('btnCancelar').style.display='none';
+    setStatus('','');
+  }
+
+  // ── CONFIG (negocio, redes, horarios, whatsapp) ──
+  async function guardarConfig(seccion) {
+    const statusEl = document.getElementById('status-'+seccion) || document.getElementById('status'+seccion.charAt(0).toUpperCase()+seccion.slice(1));
+    let datos = {};
+
+    if (seccion==='negocio') {
+      datos = {
+        nombre:     document.getElementById('cfgNombre').value.trim(),
+        email:      document.getElementById('cfgEmail').value.trim(),
+        telefono:   document.getElementById('cfgTelefono').value.trim(),
+        whatsapp:   document.getElementById('cfgWaNegocio').value.trim(),
+        direccion:  document.getElementById('cfgDireccion').value.trim(),
+        descripcion:document.getElementById('cfgDescripcion').value.trim(),
+      };
+    } else if (seccion==='redes') {
+      datos = {
+        instagram: document.getElementById('redInstagram').value.trim(),
+        facebook:  document.getElementById('redFacebook').value.trim(),
+        whatsapp:  document.getElementById('redWhatsapp').value.trim(),
+        tiktok:    document.getElementById('redTiktok').value.trim(),
+      };
+    } else if (seccion==='whatsapp') {
+      datos = {
+        numero:        document.getElementById('cfgWhatsapp').value.trim(),
+        msgBienvenida: document.getElementById('cfgMsgBienvenida').value.trim(),
+        msgBuscador:   document.getElementById('cfgMsgBuscador').value.trim(),
+      };
+    } else if (seccion==='horarios') {
+      const rows = document.querySelectorAll('.horario-data-row');
+      datos.filas = Array.from(rows).map(row => ({
+        dia:   row.querySelector('.h-dia').value.trim(),
+        desde: row.querySelector('.h-desde').value.trim(),
+        hasta: row.querySelector('.h-hasta').value.trim(),
+      })).filter(r => r.dia);
+    }
+
+    datos.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+    try {
+      await db.collection('configuracion').doc(seccion).set(datos, {merge:true});
+      showToast('Guardado correctamente.');
+      if(statusEl){statusEl.textContent='Guardado ✓';statusEl.className='form-status success';setTimeout(()=>statusEl.textContent='',3000);}
+    } catch(err) {
+      if(statusEl){statusEl.textContent='Error: '+err.message;statusEl.className='form-status error';}
+    }
+  }
+
+  async function cargarConfigUI() {
+    try {
+      const [negocio,redes,wa] = await Promise.all([
+        db.collection('configuracion').doc('negocio').get(),
+        db.collection('configuracion').doc('redes').get(),
+        db.collection('configuracion').doc('whatsapp').get(),
+      ]);
+      if(negocio.exists){const d=negocio.data();
+        ['nombre','email','telefono','descripcion','direccion'].forEach(k=>{const el=document.getElementById('cfg'+k.charAt(0).toUpperCase()+k.slice(1));if(el&&d[k])el.value=d[k];});
+        if(d.whatsapp)document.getElementById('cfgWaNegocio').value=d.whatsapp;
+      }
+      if(redes.exists){const d=redes.data();
+        if(d.instagram)document.getElementById('redInstagram').value=d.instagram;
+        if(d.facebook)document.getElementById('redFacebook').value=d.facebook;
+        if(d.whatsapp)document.getElementById('redWhatsapp').value=d.whatsapp;
+        if(d.tiktok)document.getElementById('redTiktok').value=d.tiktok;
+      }
+      if(wa.exists){const d=wa.data();
+        if(d.numero)document.getElementById('cfgWhatsapp').value=d.numero;
+        if(d.msgBienvenida)document.getElementById('cfgMsgBienvenida').value=d.msgBienvenida;
+        if(d.msgBuscador)document.getElementById('cfgMsgBuscador').value=d.msgBuscador;
+      }
+    } catch(e){}
+  }
+
+  // ── HORARIOS ──
+  const horariosDefault = [
+    {dia:'Lunes a Viernes',desde:'8:00',hasta:'18:00'},
+    {dia:'Sábados',desde:'9:00',hasta:'13:00'},
+  ];
+
+  function renderHorarioRow(h={}) {
+    const row = document.createElement('div');
+    row.className = 'horario-row horario-data-row';
+    row.innerHTML = `
+      <input class="h-dia form-group input" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;color:#fff;font-family:'Barlow',sans-serif;font-size:13px;width:100%;" placeholder="Ej: Lunes a Viernes" value="${h.dia||''}">
+      <input class="h-desde form-group input" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;color:#fff;font-family:'Barlow',sans-serif;font-size:13px;width:100%;" placeholder="8:00" value="${h.desde||''}">
+      <input class="h-hasta form-group input" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;color:#fff;font-family:'Barlow',sans-serif;font-size:13px;width:100%;" placeholder="18:00" value="${h.hasta||''}">
+      <button class="btn-icon danger" onclick="this.closest('.horario-data-row').remove()" title="Eliminar fila"><i class="fas fa-times"></i></button>`;
+    return row;
+  }
+
+  function agregarHorario(h={}) {
+    document.getElementById('horariosContainer').appendChild(renderHorarioRow(h));
+  }
+
+  async function cargarHorariosUI() {
+    try {
+      const snap = await db.collection('configuracion').doc('horarios').get();
+      const filas = snap.exists && snap.data().filas ? snap.data().filas : horariosDefault;
+      filas.forEach(h => agregarHorario(h));
+    } catch(e) { horariosDefault.forEach(h => agregarHorario(h)); }
+  }
+
+  // ── STATUS / TOAST ──
+  function setStatus(msg,type) {
+    const el = document.getElementById('formStatus');
+    el.textContent = msg; el.className = 'form-status '+type;
+  }
+
+  function showToast(msg, isError=false) {
+    const t = document.getElementById('toast');
+    t.innerHTML = `<i class="fas fa-${isError?'exclamation-circle':'check-circle'}" style="color:${isError?'var(--rojo)':'var(--verde)'}"></i> ${msg}`;
+    t.className = 'toast' + (isError?' error':'') + ' show';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'),3500);
+  }
+  // ══════════════ GALERÍA ══════════════
+
+  // ── IMAGEN (galería) ──
+  async function subirImagenGaleria(input) {
+    const file = input.files[0];
+    if (!file) return;
+    document.getElementById('imgPlaceholderG').style.display = 'none';
+    document.getElementById('imgPreviewG').style.display = 'none';
+    document.getElementById('imgUploadProgressG').style.display = 'flex';
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', CLOUDINARY_PRESET);
+      const res = await fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', { method:'POST', body:fd });
+      if (!res.ok) throw new Error('Error al subir');
+      const data = await res.json();
+      document.getElementById('fImagenG').value = data.secure_url;
+      document.getElementById('imgPreviewImgG').src = data.secure_url;
+      document.getElementById('imgUploadProgressG').style.display = 'none';
+      document.getElementById('imgPreviewG').style.display = 'block';
+      document.getElementById('imgUploadBoxG').style.cursor = 'default';
+    } catch(err) {
+      document.getElementById('imgUploadProgressG').style.display = 'none';
+      document.getElementById('imgPlaceholderG').style.display = 'flex';
+      showToast('Error al subir imagen.', true);
+    }
+  }
+
+  function quitarImagenGaleria() {
+    document.getElementById('fImagenG').value = '';
+    document.getElementById('imgPreviewImgG').src = '';
+    document.getElementById('imgPreviewG').style.display = 'none';
+    document.getElementById('imgPlaceholderG').style.display = 'flex';
+    document.getElementById('imgUploadBoxG').style.cursor = 'pointer';
+    document.getElementById('fileInputG').value = '';
+  }
+
+  // ── GUARDAR FOTO ──
+  async function guardarGaleria() {
+    const statusEl = 'formStatusGaleria';
+    const imagen = document.getElementById('fImagenG').value.trim();
+    if (!imagen) { setStatusEl(statusEl, 'La imagen es obligatoria.', 'error'); return; }
+
+    const datos = {
+      imagen,
+      titulo: document.getElementById('fTituloG').value.trim() || null,
+      orden:  parseInt(document.getElementById('fOrdenG').value) || 1,
+      activa: document.getElementById('fActivaG').value === 'true',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    const editId = document.getElementById('editIdGaleria').value;
+    setStatusEl(statusEl, 'Guardando...', '');
+    try {
+      if (editId) {
+        await db.collection('galeria').doc(editId).update(datos);
+        showToast('Foto actualizada.');
+      } else {
+        datos.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection('galeria').add(datos);
+        showToast('Foto agregada a la galería.');
+      }
+      limpiarFormularioGaleria();
+      cargarGaleria();
+      cargarStats();
+    } catch(err) { setStatusEl(statusEl, 'Error: '+err.message, 'error'); }
+  }
+
+  function setStatusEl(id, msg, type) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.className = 'form-status '+type; }
+  }
+
+  // ── CARGAR GRILLA ──
+  async function cargarGaleria() {
+    const lista = document.getElementById('galeriaList');
+    const count = document.getElementById('galeriaAdminCount');
+    if (!lista) return;
+    lista.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Cargando...</p></div>';
+    try {
+      const snap = await db.collection('galeria').orderBy('orden','asc').get();
+      if (count) count.textContent = snap.size;
+      if (snap.empty) {
+        lista.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>No hay fotos aún. Subí la primera.</p></div>';
+        return;
+      }
+      lista.innerHTML = '<div class="galeria-grid-admin">' + snap.docs.map(doc => renderGaleriaItemAdmin(doc.id, doc.data())).join('') + '</div>';
+    } catch(err) {
+      lista.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar. Verificá los permisos de Firestore.</p></div>';
+    }
+  }
+
+  function renderGaleriaItemAdmin(id, g) {
+    const activa = g.activa !== false;
+    return `
+      <div class="galeria-card ${activa?'':'inactive'}">
+        <div class="galeria-thumb-wrap">
+          <img src="${g.imagen}" alt="${g.titulo||''}" loading="lazy">
+        </div>
+        <div class="galeria-card-body">
+          <div class="galeria-card-info">
+            <p>${g.titulo || 'Sin descripción'}</p>
+            <span>Orden ${g.orden||'—'} · ${activa?'Visible':'Oculta'}</span>
+          </div>
+          <div class="galeria-card-actions">
+            <button class="btn-icon" title="Editar" onclick="editarGaleria('${id}')"><i class="fas fa-pencil-alt"></i></button>
+            <button class="btn-icon" title="${activa?'Ocultar':'Mostrar'}" onclick="toggleActivaGaleria('${id}',${activa})"><i class="fas fa-${activa?'eye-slash':'eye'}"></i></button>
+            <button class="btn-icon danger" title="Eliminar" onclick="pedirEliminar('${id}','galeria')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ── EDITAR ──
+  async function editarGaleria(id) {
+    try {
+      const doc = await db.collection('galeria').doc(id).get();
+      const g = doc.data();
+      document.getElementById('editIdGaleria').value = id;
+      document.getElementById('fTituloG').value = g.titulo || '';
+      document.getElementById('fOrdenG').value = g.orden || 1;
+      document.getElementById('fActivaG').value = g.activa !== false ? 'true' : 'false';
+      const imgUrl = g.imagen || '';
+      document.getElementById('fImagenG').value = imgUrl;
+      if (imgUrl) {
+        document.getElementById('imgPreviewImgG').src = imgUrl;
+        document.getElementById('imgPreviewG').style.display = 'block';
+        document.getElementById('imgPlaceholderG').style.display = 'none';
+        document.getElementById('imgUploadBoxG').style.cursor = 'default';
+      } else { quitarImagenGaleria(); }
+      document.getElementById('formTitleGaleria').textContent = 'Editando foto';
+      document.getElementById('btnGuardarTextGaleria').textContent = 'Actualizar';
+      document.getElementById('btnCancelarGaleria').style.display = 'inline-flex';
+      showSection('galeria');
+      document.querySelector('#panel-galeria .card').scrollIntoView({behavior:'smooth'});
+    } catch(err) { showToast('Error al cargar.', true); }
+  }
+
+  async function toggleActivaGaleria(id, estadoActual) {
+    try {
+      await db.collection('galeria').doc(id).update({activa: !estadoActual});
+      showToast(!estadoActual ? 'Foto activada.' : 'Foto ocultada.');
+      cargarGaleria(); cargarStats();
+    } catch(e) { showToast('Error.', true); }
+  }
+
+  function cancelarEdicionGaleria() { limpiarFormularioGaleria(); }
+  function limpiarFormularioGaleria() {
+    document.getElementById('fTituloG').value = '';
+    document.getElementById('fOrdenG').value = '1';
+    document.getElementById('fActivaG').value = 'true';
+    document.getElementById('editIdGaleria').value = '';
+    quitarImagenGaleria();
+    document.getElementById('formTitleGaleria').textContent = 'Nueva foto';
+    document.getElementById('btnGuardarTextGaleria').textContent = 'Guardar';
+    document.getElementById('btnCancelarGaleria').style.display = 'none';
+    setStatusEl('formStatusGaleria', '', '');
+  }
+</script>
+</body>
+</html>

@@ -1,9 +1,24 @@
 // ========== INICIALIZAR AOS ==========
-AOS.init({
-  duration: 800,
-  once: true,
-  offset: 100,
-  easing: 'ease-in-out'
+// Esperamos al load completo para que AOS calcule bien las posiciones reales
+window.addEventListener('load', () => {
+  AOS.init({
+    duration: 750,
+    once: true,
+    offset: 0,            // Dispara en cuanto el elemento entra al viewport
+    easing: 'ease-out-cubic',
+    startEvent: 'load',
+    initClassName: 'aos-init',
+    animatedClassName: 'aos-animate',
+    useClassNames: false,
+    disableMutationObserver: false,
+    debounceDelay: 20,
+    throttleDelay: 60,
+    mirror: false,
+  });
+
+  // Forzar refresh para que los elementos ya visibles al cargar se animen correctamente
+  setTimeout(() => AOS.refresh(), 300);
+  setTimeout(() => AOS.refresh(), 1000); // segundo refresh por si el preloader desplazó layouts
 });
 
 // ========== PRELOADER ==========
@@ -20,14 +35,19 @@ window.addEventListener('load', () => {
 });
 
 // ========== CONFIGURACIÓN DE FIREBASE ==========
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyBZtUa8TyHCjpBFISkSUGl0hKTGS06_UAA",
+  authDomain: "brevi-neumaticos.firebaseapp.com",
+  projectId: "brevi-neumaticos",
+  storageBucket: "brevi-neumaticos.firebasestorage.app",
+  messagingSenderId: "126173922281",
+  appId: "1:126173922281:web:46863b73abc7085f128178"
 };
+
+// Initialize Firebase
+
 
 let db;
 try {
@@ -156,11 +176,12 @@ const heroSwiper = new Swiper('.hero-slider', {
   slidesPerView: 1,
   spaceBetween: 0,
   loop: true,
-  autoplay: { delay: 5000, disableOnInteraction: false },
-  pagination: { el: '.swiper-pagination', clickable: true },
-  navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+  autoplay: { delay: 6000, disableOnInteraction: false, pauseOnMouseEnter: true },
+  pagination: { el: '.hero .swiper-pagination', clickable: true },
+  navigation: { nextEl: '.hero .swiper-button-next', prevEl: '.hero .swiper-button-prev' },
   effect: 'fade',
-  fadeEffect: { crossFade: true }
+  fadeEffect: { crossFade: true },
+  speed: 1200, // Transición de 1.2s — suave y cinematográfica
 });
 
 // ========== FUNCIÓN WHATSAPP ==========
@@ -188,88 +209,9 @@ const bannerPalettes = [
   { bg: 'linear-gradient(135deg, #000a0a 0%, #001a15 60%, #002a20 100%)', overlay: 'linear-gradient(90deg, rgba(0,5,5,0.95) 0%, rgba(0,5,5,0.7) 60%, rgba(0,0,0,0.1) 100%)' },
 ];
 
-// Datos de fallback para banners (se muestran si no hay Firebase)
-const defaultBanners = [
-  {
-    tipo: 'generado',
-    tag: '🔥 Oferta del mes',
-    titulo: '20% OFF en toda la línea',
-    destacado: 'Pirelli Agro',
-    descripcion: 'Descuento especial en neumáticos agrícolas Pirelli seleccionados. Stock limitado.',
-    precio: null,
-    precioAnterior: null,
-    descuento: '20% OFF',
-    imagen: null,
-    paletaIdx: 0,
-    whatsappTexto: 'Hola! Consulto por el 20% OFF en neumáticos Pirelli Agro.'
-  },
-  {
-    tipo: 'generado',
-    tag: '💳 Financiación',
-    titulo: 'Hasta 12 cuotas',
-    destacado: 'sin interés',
-    descripcion: 'Financiá tu compra con tarjeta de crédito en todos los bancos adheridos.',
-    precio: null,
-    precioAnterior: null,
-    descuento: null,
-    imagen: null,
-    paletaIdx: 1,
-    whatsappTexto: 'Hola! Consulto por la financiación en cuotas sin interés.'
-  },
-  {
-    tipo: 'generado',
-    tag: '🚚 Envío gratis',
-    titulo: 'Entrega en tu',
-    destacado: 'chacra o campo',
-    descripcion: 'Coordinamos la entrega directamente en tu establecimiento en todo el Alto Valle.',
-    precio: null,
-    precioAnterior: null,
-    descuento: null,
-    imagen: null,
-    paletaIdx: 3,
-    whatsappTexto: 'Hola! Consulto por el servicio de entrega a domicilio.'
-  }
-];
-
-// Datos de fallback para tarjetas de promo
-const defaultPromos = [
-  {
-    titulo: "2×1 en Pirelli FarmTrac R1",
-    descripcion: "Llevate dos neumáticos de la línea R1 y pagá uno. Ideal para tractores de tracción.",
-    precio: "$120.000",
-    precioAnterior: "$240.000",
-    descuento: "50% OFF",
-    imagen: null,
-    whatsappTexto: "2x1 Pirelli FarmTrac R1"
-  },
-  {
-    titulo: "20% OFF Línea Vial",
-    descripcion: "Descuento especial en neumáticos Pirelli FG:01 y FR:01 para camiones de larga distancia.",
-    precio: "$180.000",
-    precioAnterior: "$225.000",
-    descuento: "20% OFF",
-    imagen: null,
-    whatsappTexto: "20% OFF Pirelli Línea Vial"
-  },
-  {
-    titulo: "Financiación sin interés",
-    descripcion: "Hasta 12 cuotas sin interés en toda la línea Pirelli Agro y Vial con tarjetas seleccionadas.",
-    precio: "Consultá",
-    precioAnterior: null,
-    descuento: null,
-    imagen: null,
-    whatsappTexto: "Financiación en cuotas Pirelli"
-  },
-  {
-    titulo: "Pack Doble Eje",
-    descripcion: "Compra combinada de neumáticos de dirección + tracción para camión. Precio especial de conjunto.",
-    precio: "Consultar",
-    precioAnterior: null,
-    descuento: "Pack",
-    imagen: null,
-    whatsappTexto: "Pack Doble Eje Pirelli camión"
-  }
-];
+// Sin datos de ejemplo — las promociones se cargan exclusivamente desde Firebase
+const defaultBanners = [];
+const defaultPromos = [];
 
 // ---- Render banner generado ----
 function renderBannerGenerado(banner, idx) {
@@ -305,33 +247,46 @@ function renderBannerGenerado(banner, idx) {
 
 // ---- Render banner con imagen ----
 function renderBannerImagen(banner) {
-  const whatsappUrl = `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(banner.whatsappTexto || 'Hola, consulto por una promoción.')}`;
-  return `
-    <div class="swiper-slide">
-      <img src="${banner.imagen}" alt="${banner.titulo || 'Promoción'}" class="banner-img-slide"
-        onerror="this.parentElement.innerHTML = \`${renderBannerGenerado(banner, 0).replace(/`/g, "'")}\`">
-      <div class="banner-overlay-content">
-        <div class="banner-overlay-gradient" style="background: linear-gradient(90deg, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);"></div>
-        <div class="banner-text-block" style="position:relative;z-index:3;">
-          ${banner.tag ? `<span class="banner-tag">${banner.tag}</span>` : ''}
-          <h2 class="banner-title">
-            ${banner.titulo || ''}<br><span class="banner-highlight">${banner.destacado || ''}</span>
-          </h2>
-          ${banner.descripcion ? `<p class="banner-desc">${banner.descripcion}</p>` : ''}
-          ${(banner.precio || banner.descuento) ? `
-            <div class="banner-price-block">
-              ${banner.precio ? `<span class="banner-price-new">${banner.precio}</span>` : ''}
-              ${banner.precioAnterior ? `<span class="banner-price-old">${banner.precioAnterior}</span>` : ''}
-              ${banner.descuento ? `<span class="banner-discount-badge">${banner.descuento}</span>` : ''}
-            </div>
-          ` : ''}
-          <a href="${whatsappUrl}" class="banner-cta" target="_blank" rel="noopener">
-            <i class="fab fa-whatsapp"></i> Consultar ahora
-          </a>
-        </div>
-      </div>
-    </div>
-  `;
+  const waTexto = banner.whatsappTexto || 'Hola, consulto por una promocion.';
+  const whatsappUrl = 'https://wa.me/' + numeroWhatsapp + '?text=' + encodeURIComponent(waTexto);
+  const precio = banner.precio || '';
+  const precioAnterior = banner.precioAnterior || '';
+  const descuento = banner.descuento || '';
+  const tag = banner.tag || '';
+  const titulo = banner.titulo || '';
+  const destacado = banner.destacado || '';
+  const descripcion = banner.descripcion || '';
+
+  const precioHTML = (precio || descuento) ? (
+    '<div class="banner-price-block">' +
+    (precio ? '<span class="banner-price-new">' + precio + '</span>' : '') +
+    (precioAnterior ? '<span class="banner-price-old">' + precioAnterior + '</span>' : '') +
+    (descuento ? '<span class="banner-discount-badge">' + descuento + '</span>' : '') +
+    '</div>'
+  ) : '';
+
+  const ctaHTML = banner.whatsappTexto
+    ? '<a href="' + whatsappUrl + '" class="banner-cta" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Consultar ahora</a>'
+    : '';
+
+  return (
+    '<div class="swiper-slide">' +
+      '<div class="banner-generated">' +
+        '<img src="' + banner.imagen + '" alt="' + titulo + '" class="banner-img-slide" ' +
+          'onerror="this.style.display=\'none\'">' +
+        '<div class="banner-overlay-gradient banner-overlay-gradient-img"></div>' +
+        '<div class="banner-overlay-content">' +
+          '<div class="banner-text-block">' +
+            (tag ? '<span class="banner-tag">' + tag + '</span>' : '') +
+            '<h2 class="banner-title">' + titulo + (destacado ? '<br><span class="banner-highlight">' + destacado + '</span>' : '') + '</h2>' +
+            (descripcion ? '<p class="banner-desc">' + descripcion + '</p>' : '') +
+            precioHTML +
+            ctaHTML +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  );
 }
 
 // ---- Render promo card ----
@@ -370,34 +325,35 @@ function renderPromoCard(promo) {
 function initBannerSwiper(banners) {
   if (bannerSwiper) { bannerSwiper.destroy(true, true); bannerSwiper = null; }
   clearInterval(bannerInterval);
+  if (progressRAF) cancelAnimationFrame(progressRAF);
 
-  bannerSwiper = new Swiper('.banner-carousel', {
-    slidesPerView: 1,
-    spaceBetween: 0,
-    loop: banners.length > 1,
-    effect: 'fade',
-    fadeEffect: { crossFade: true },
-    speed: 800,
-    autoplay: false, // manejamos el progreso manualmente
-    pagination: {
-      el: '.banner-pagination',
-      clickable: true,
-    },
-    navigation: false,
-    on: {
-      slideChange: () => resetProgressBar()
-    }
-  });
+  setTimeout(() => {
+    bannerSwiper = new Swiper('.banner-carousel', {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      loop: banners.length > 1,
+      effect: 'fade',
+      fadeEffect: { crossFade: true },
+      speed: 800,
+      autoplay: false,
+      pagination: {
+        el: '.banner-pagination',
+        clickable: true,
+      },
+      navigation: false,
+      on: {
+        slideChange: () => resetProgressBar()
+      }
+    });
 
-  // Botones de navegación custom
-  const btnPrev = document.querySelector('.banner-prev');
-  const btnNext = document.querySelector('.banner-next');
-  if (btnPrev) btnPrev.addEventListener('click', () => { bannerSwiper.slidePrev(); });
-  if (btnNext) btnNext.addEventListener('click', () => { bannerSwiper.slideNext(); });
+    const btnPrev = document.querySelector('.banner-prev');
+    const btnNext = document.querySelector('.banner-next');
+    if (btnPrev) btnPrev.onclick = () => bannerSwiper.slidePrev();
+    if (btnNext) btnNext.onclick = () => bannerSwiper.slideNext();
 
-  if (banners.length > 1) startProgressBar();
+    if (banners.length > 1) startProgressBar();
+  }, 100);
 }
-
 // ---- Barra de progreso ----
 let progressStart = null;
 let progressRAF = null;
@@ -472,32 +428,49 @@ async function loadPromotions() {
 
       snap.forEach(doc => {
         const data = { id: doc.id, ...doc.data() };
-        // Si tiene imagen o datos de banner, va al carrusel principal
-        if (data.esBanner) {
-          banners.push(data);
+        // Todos van al carrusel de banners
+        banners.push(data);
+        // Solo van a las tarjetas si tipo === 'oferta' (o si no tiene tipo definido, por compatibilidad)
+        if (data.generaTarjeta !== false && data.tipo !== 'banner') {
+          promoCards.push(data);
         }
-        // Siempre va también a las tarjetas
-        promoCards.push(data);
       });
     } catch (err) {
       console.warn('Firestore no disponible, usando datos de ejemplo:', err);
     }
   }
 
-  // Fallback si no hay datos de Firebase
-  if (banners.length === 0) banners = defaultBanners;
-  if (promoCards.length === 0) promoCards = defaultPromos;
-
-  // --- Renderizar banners ---
-  bannerContainer.innerHTML = banners.map((b, i) => {
-    if (b.imagen) return renderBannerImagen(b);
-    return renderBannerGenerado(b, i);
-  }).join('');
+  // Sin fallback — si no hay datos en Firebase, mostrar estado vacío
+  if (banners.length === 0) {
+    bannerContainer.innerHTML = `
+      <div class="swiper-slide">
+        <div class="banner-generated" style="background:#141414;display:flex;align-items:center;justify-content:center;">
+          <div style="text-align:center;padding:40px 20px;">
+            <i class="fas fa-tag" style="font-size:48px;color:var(--amarillo);margin-bottom:16px;display:block;"></i>
+            <p style="color:rgba(255,255,255,0.5);font-size:16px;">Próximamente nuevas promociones</p>
+          </div>
+        </div>
+      </div>`;
+  } else {
+    bannerContainer.innerHTML = banners.map((b, i) => {
+      if (b.imagen) return renderBannerImagen(b);
+      return renderBannerGenerado(b, i);
+    }).join('');
+  }
 
   initBannerSwiper(banners);
 
   // --- Renderizar tarjetas ---
-  promosContainer.innerHTML = promoCards.map(renderPromoCard).join('');
+  if (promoCards.length === 0) {
+    promosContainer.innerHTML = `
+      <div class="swiper-slide">
+        <div class="promo-card" style="display:flex;align-items:center;justify-content:center;min-height:200px;">
+          <p style="color:rgba(255,255,255,0.4);text-align:center;">Próximamente nuevas ofertas</p>
+        </div>
+      </div>`;
+  } else {
+    promosContainer.innerHTML = promoCards.map(renderPromoCard).join('');
+  }
   setTimeout(() => initPromoCardsSwiper(), 100);
 }
 
@@ -506,25 +479,21 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPromotions();
 });
 
-// ========== BUSCADOR MEJORADO - SOLO PIRELLI ==========
+// ========== BUSCADOR — DIRECTO A WHATSAPP ==========
 const buscarBtn = document.getElementById('buscarWhatsApp');
-const anchoInput = document.getElementById('ancho');
-const aspectoInput = document.getElementById('aspecto');
-const diametroInput = document.getElementById('diametro');
-const medidaCompletaInput = document.getElementById('medidaCompleta');
 const typeBtns = document.querySelectorAll('.type-btn');
 const searchTabs = document.querySelectorAll('.search-tab');
 const searchPanels = document.querySelectorAll('.search-panel');
-const searchResultsDiv = document.getElementById('searchResults');
-const resultsList = document.getElementById('resultsList');
-const resultsCount = document.getElementById('resultsCount');
-const tipoVehiculoSelect = document.getElementById('tipoVehiculo');
-const modeloVehiculoInput = document.getElementById('modeloVehiculo');
-const terrenoSelect = document.getElementById('terreno');
-const rangoPrecioSelect = document.getElementById('rangoPrecio');
 
 let selectedType = 'agro';
-let currentSearchResults = [];
+
+typeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    typeBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedType = btn.getAttribute('data-type');
+  });
+});
 
 searchTabs.forEach(tab => {
   tab.addEventListener('click', () => {
@@ -532,149 +501,43 @@ searchTabs.forEach(tab => {
     searchTabs.forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     searchPanels.forEach(panel => panel.classList.remove('active'));
-    document.getElementById(`panel-${tabId}`).classList.add('active');
-    if (searchResultsDiv) searchResultsDiv.style.display = 'none';
+    const panel = document.getElementById('panel-' + tabId);
+    if (panel) panel.classList.add('active');
   });
 });
-
-typeBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    typeBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedType = btn.getAttribute('data-type');
-    if (searchResultsDiv) searchResultsDiv.style.display = 'none';
-  });
-});
-
-function parseMedidaCompleta(medida) {
-  const patronRadial = /^(\d{2,4})\/(\d{2,3})R(\d{1,2}(?:\.\d+)?)$/i;
-  const patronDiagonal = /^(\d{1,2}(?:\.\d+)?)-(\d{1,2})$/i;
-  let match = medida.match(patronRadial);
-  if (match) return { ancho: parseInt(match[1]), aspecto: parseInt(match[2]), diametro: parseFloat(match[3]) };
-  match = medida.match(patronDiagonal);
-  if (match) return { ancho: null, aspecto: null, diametro: parseFloat(match[2]) };
-  return null;
-}
-
-function getAplicacionPorVehiculo(vehiculo) {
-  const mapping = { 'tractor': 'campo', 'cosechadora': 'campo', 'camion': 'ruta', 'implemento': 'mixto', 'camioneta': 'mixto' };
-  return mapping[vehiculo] || null;
-}
-
-function searchTires() {
-  const results = [];
-  const activeTab = document.querySelector('.search-tab.active')?.getAttribute('data-tab');
-
-  if (activeTab === 'medida') {
-    let ancho = anchoInput?.value ? parseInt(anchoInput.value) : null;
-    let aspecto = aspectoInput?.value ? parseInt(aspectoInput.value) : null;
-    let diametro = diametroInput?.value ? parseFloat(diametroInput.value) : null;
-    const medidaCompleta = medidaCompletaInput?.value?.trim();
-    if (medidaCompleta && !ancho && !aspecto && !diametro) {
-      const parsed = parseMedidaCompleta(medidaCompleta);
-      if (parsed) { ancho = parsed.ancho; aspecto = parsed.aspecto; diametro = parsed.diametro; }
-    }
-    tireDatabase.forEach(tire => {
-      if (tire.tipo !== selectedType) return;
-      let match = true;
-      if (ancho && tire.medidas.ancho && Math.abs(tire.medidas.ancho - ancho) > 20) match = false;
-      if (aspecto && tire.medidas.aspecto && Math.abs(tire.medidas.aspecto - aspecto) > 10) match = false;
-      if (diametro && tire.medidas.diametro && Math.abs(tire.medidas.diametro - diametro) > 0.5) match = false;
-      if (match) results.push(tire);
-    });
-  } else if (activeTab === 'vehiculo') {
-    const vehiculo = tipoVehiculoSelect?.value;
-    if (vehiculo) {
-      const aplicacionBuscada = getAplicacionPorVehiculo(vehiculo);
-      tireDatabase.forEach(tire => {
-        if (tire.tipo !== selectedType) return;
-        if (tire.aplicacion === aplicacionBuscada) results.push(tire);
-      });
-    } else {
-      tireDatabase.forEach(tire => { if (tire.tipo === selectedType) results.push(tire); });
-    }
-  } else if (activeTab === 'aplicacion') {
-    const aplicacion = terrenoSelect?.value;
-    tireDatabase.forEach(tire => {
-      if (tire.tipo !== selectedType) return;
-      if (aplicacion === tire.aplicacion) results.push(tire);
-    });
-    if (results.length === 0 && (!aplicacion || aplicacion === '')) {
-      tireDatabase.forEach(tire => { if (tire.tipo === selectedType) results.push(tire); });
-    }
-  }
-
-  const uniqueResults = [];
-  const seen = new Set();
-  for (const tire of results) {
-    const key = `${tire.nombre}-${tire.especificacion}`;
-    if (!seen.has(key)) { seen.add(key); uniqueResults.push(tire); }
-  }
-
-  currentSearchResults = uniqueResults;
-  displaySearchResults(uniqueResults);
-  return uniqueResults;
-}
-
-function displaySearchResults(results) {
-  if (!searchResultsDiv || !resultsCount || !resultsList) return;
-  if (results.length > 0) {
-    searchResultsDiv.style.display = 'block';
-    resultsCount.textContent = results.length;
-    resultsList.innerHTML = results.map(tire => `
-      <div class="results-list-item">
-        <div>
-          <div class="result-name">${tire.nombre}</div>
-          <div class="result-spec">${tire.especificacion} | ${tire.uso}</div>
-        </div>
-        <button class="btn-whatsapp result-whatsapp" data-modelo="${tire.nombre}" data-espec="${tire.especificacion}" data-aplicacion="${tire.aplicacion}" data-uso="${tire.uso}">
-          <i class="fab fa-whatsapp"></i> Consultar
-        </button>
-      </div>
-    `).join('');
-    document.querySelectorAll('.result-whatsapp').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        enviarWhatsApp(btn.getAttribute('data-modelo'), btn.getAttribute('data-espec'), btn.getAttribute('data-aplicacion'), btn.getAttribute('data-uso'));
-      });
-    });
-  } else {
-    searchResultsDiv.style.display = 'block';
-    resultsCount.textContent = '0';
-    resultsList.innerHTML = `
-      <div style="text-align: center; padding: 20px;">
-        <i class="fas fa-search" style="font-size: 48px; color: var(--amarillo); margin-bottom: 15px; display: block;"></i>
-        No se encontraron neumáticos Pirelli con esos criterios.
-        <br><br>
-        <strong>¡Consultanos directamente por WhatsApp y te asesoramos!</strong>
-      </div>
-    `;
-  }
-}
 
 if (buscarBtn) {
   buscarBtn.addEventListener('click', () => {
-    const results = searchTires();
-    let texto = `Hola, necesito asesoramiento para neumáticos PIRELLI ${selectedType === 'agro' ? 'agrícolas' : 'viales'}.`;
     const activeTab = document.querySelector('.search-tab.active')?.getAttribute('data-tab');
+    const tipoTexto = selectedType === 'agro' ? 'agricola' : 'vial';
+    let texto = 'Hola! Consulto por neumaticos PIRELLI ' + tipoTexto + '.';
+
     if (activeTab === 'medida') {
-      if (medidaCompletaInput?.value) texto += ` Medida: ${medidaCompletaInput.value}.`;
-      else {
-        if (anchoInput?.value) texto += ` Ancho: ${anchoInput.value}mm.`;
-        if (aspectoInput?.value) texto += ` Relación: ${aspectoInput.value}%.`;
-        if (diametroInput?.value) texto += ` Diámetro: ${diametroInput.value}".`;
+      const medidaCompleta = document.getElementById('medidaCompleta')?.value?.trim();
+      const ancho    = document.getElementById('ancho')?.value?.trim();
+      const aspecto  = document.getElementById('aspecto')?.value?.trim();
+      const diametro = document.getElementById('diametro')?.value?.trim();
+      if (medidaCompleta) {
+        texto += ' Medida: ' + medidaCompleta + '.';
+      } else if (ancho || aspecto || diametro) {
+        if (ancho)    texto += ' Ancho: ' + ancho + 'mm.';
+        if (aspecto)  texto += ' Perfil: ' + aspecto + '%.';
+        if (diametro) texto += ' Diametro: ' + diametro + '".' ;
+      } else {
+        texto += ' Necesito asesoramiento para elegir la medida correcta.';
       }
     } else if (activeTab === 'vehiculo') {
-      if (tipoVehiculoSelect?.value) texto += ` Vehículo: ${tipoVehiculoSelect.options[tipoVehiculoSelect.selectedIndex]?.text}.`;
-      if (modeloVehiculoInput?.value) texto += ` Modelo: ${modeloVehiculoInput.value}.`;
+      const vehiculoSel = document.getElementById('tipoVehiculo');
+      const modelo = document.getElementById('modeloVehiculo')?.value?.trim();
+      if (vehiculoSel?.value) texto += ' Vehiculo: ' + vehiculoSel.options[vehiculoSel.selectedIndex].text + '.';
+      if (modelo) texto += ' Modelo/marca: ' + modelo + '.';
     } else if (activeTab === 'aplicacion') {
-      if (terrenoSelect?.value) texto += ` Aplicación: ${terrenoSelect.options[terrenoSelect.selectedIndex]?.text}.`;
-      if (rangoPrecioSelect?.value) texto += ` Rango: ${rangoPrecioSelect.options[rangoPrecioSelect.selectedIndex]?.text}.`;
+      const terrenoSel = document.getElementById('terreno');
+      if (terrenoSel?.value) texto += ' Aplicacion/terreno: ' + terrenoSel.options[terrenoSel.selectedIndex].text + '.';
     }
-    if (currentSearchResults.length > 0) {
-      texto += ` Encontré estos neumáticos Pirelli: ${currentSearchResults.slice(0, 5).map(r => `${r.nombre} ${r.especificacion}`).join(', ')}.`;
-    }
-    window.open(`https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(texto)}`, '_blank');
+
+    texto += ' Me pueden asesorar?';
+    window.open('https://wa.me/' + numeroWhatsapp + '?text=' + encodeURIComponent(texto), '_blank');
   });
 }
 
@@ -716,5 +579,131 @@ function setHeroHeight() {
 }
 window.addEventListener('load', setHeroHeight);
 window.addEventListener('resize', setHeroHeight);
+
+// ========== GALERÍA DE IMÁGENES ==========
+let galeriaItems = [];
+let lightboxIndex = 0;
+
+function renderGaleriaItem(item) {
+  const caption = item.titulo
+    ? `<div class="gallery-item-overlay"><span class="gallery-item-caption">${item.titulo}</span></div>`
+    : `<div class="gallery-item-overlay"></div>`;
+  return `
+    <div class="gallery-item" data-imagen="${item.imagen}" data-titulo="${(item.titulo || '').replace(/"/g, '&quot;')}">
+      <img src="${item.imagen}" alt="${item.titulo || 'Brevi Neumáticos'}" loading="lazy" onerror="this.closest('.gallery-item').style.display='none'">
+      ${caption}
+      <span class="gallery-zoom-icon"><i class="fas fa-expand"></i></span>
+    </div>
+  `;
+}
+
+async function loadGaleria() {
+  const grid = document.getElementById('galeriaGrid');
+  const countEl = document.getElementById('galeriaCount');
+  if (!grid) return;
+
+  let imagenes = [];
+
+  if (db) {
+    try {
+      const snap = await db.collection('galeria')
+        .where('activa', '==', true)
+        .orderBy('orden', 'asc')
+        .get();
+      snap.forEach(doc => imagenes.push({ id: doc.id, ...doc.data() }));
+    } catch (err) {
+      console.warn('Galería: no se pudo cargar desde Firestore:', err);
+    }
+  }
+
+  galeriaItems = imagenes.filter(i => i.imagen);
+
+  if (countEl) countEl.textContent = galeriaItems.length;
+
+  if (galeriaItems.length === 0) {
+    grid.innerHTML = `
+      <div class="gallery-empty-state" style="column-span: all;">
+        <i class="fas fa-images"></i>
+        <p>Próximamente fotos de nuestro local y trabajos realizados.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = galeriaItems.map(renderGaleriaItem).join('');
+  initGalleryClicks();
+}
+
+function initGalleryClicks() {
+  document.querySelectorAll('.gallery-item').forEach((el, idx) => {
+    el.addEventListener('click', () => openLightbox(idx));
+  });
+}
+
+function openLightbox(idx) {
+  lightboxIndex = idx;
+  updateLightbox();
+  const overlay = document.getElementById('lightboxOverlay');
+  if (overlay) {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeLightbox() {
+  const overlay = document.getElementById('lightboxOverlay');
+  if (overlay) {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function updateLightbox() {
+  if (!galeriaItems.length) return;
+  const item = galeriaItems[lightboxIndex];
+  const img = document.getElementById('lightboxImg');
+  const caption = document.getElementById('lightboxCaption');
+  const counter = document.getElementById('lightboxCounter');
+  if (img) img.src = item.imagen;
+  if (caption) caption.textContent = item.titulo || '';
+  if (counter) counter.textContent = (lightboxIndex + 1) + ' / ' + galeriaItems.length;
+}
+
+function lightboxPrev() {
+  if (!galeriaItems.length) return;
+  lightboxIndex = (lightboxIndex - 1 + galeriaItems.length) % galeriaItems.length;
+  updateLightbox();
+}
+
+function lightboxNext() {
+  if (!galeriaItems.length) return;
+  lightboxIndex = (lightboxIndex + 1) % galeriaItems.length;
+  updateLightbox();
+}
+
+const lightboxCloseBtn = document.getElementById('lightboxClose');
+const lightboxPrevBtn = document.getElementById('lightboxPrev');
+const lightboxNextBtn = document.getElementById('lightboxNext');
+const lightboxOverlayEl = document.getElementById('lightboxOverlay');
+
+if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+if (lightboxPrevBtn) lightboxPrevBtn.addEventListener('click', lightboxPrev);
+if (lightboxNextBtn) lightboxNextBtn.addEventListener('click', lightboxNext);
+if (lightboxOverlayEl) {
+  lightboxOverlayEl.addEventListener('click', (e) => {
+    if (e.target === lightboxOverlayEl) closeLightbox();
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  const overlay = document.getElementById('lightboxOverlay');
+  if (!overlay || !overlay.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lightboxPrev();
+  if (e.key === 'ArrowRight') lightboxNext();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadGaleria();
+});
 
 console.log('Brevi Neumáticos — Carrusel de Banners & Promociones activo ✓');

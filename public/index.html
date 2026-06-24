@@ -10,7 +10,7 @@
   <title>Brevi Neumáticos | Agro & Vial | Allen, RN</title>
   <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
   <link rel="stylesheet" href="css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -37,6 +37,7 @@
         <li><a href="#servicios" class="nav-link">Servicios</a></li>
         <li><a href="#buscador" class="nav-link">Buscador</a></li>
         <li><a href="#promociones" class="nav-link">Promociones</a></li>
+        <li><a href="#galeria" class="nav-link">Galería</a></li>
         <li><a href="#contacto" class="nav-link">Contacto</a></li>
       </ul>
     </nav>
@@ -64,7 +65,7 @@
             <div class="hero-content" data-aos="fade-up">
               <span class="hero-badge">Especialistas en el campo y la ruta</span>
               <h1>Neumáticos que <span class="highlight">potencian</span> tu trabajo</h1>
-              <p>Más de 15 años equipando tractores, cosechadoras, camiones y maquinaria vial en todo Río Negro.</p>
+              <p>Más de 40 años equipando tractores, cosechadoras, camiones y maquinaria vial en todo Río Negro.</p>
               <div class="hero-buttons">
                 <a href="#buscador" class="btn-primary">Buscar neumáticos <i class="fas fa-search"></i></a>
                 <a href="#contacto" class="btn-secondary">Contactar ahora <i class="fas fa-headset"></i></a>
@@ -195,7 +196,7 @@
         </div>
         <div class="about-stats" data-aos="fade-left">
           <div class="stat-card">
-            <span class="number">+15</span>
+            <span class="number">+40</span>
             <span class="label">Años de experiencia en el sector</span>
           </div>
           <div class="stat-card">
@@ -373,6 +374,33 @@
     </div>
   </section>
 
+  <!-- ========== GALERÍA ========== -->
+  <section id="galeria" class="gallery">
+    <div class="container">
+      <div class="gallery-intro">
+        <div class="section-header" data-aos="fade-up">
+          <span class="section-tag">Conocenos</span>
+          <h2 class="section-title">Nuestra <span class="highlight">Galería</span></h2>
+          <p style="color:var(--gris-claro);max-width:480px;">Un recorrido visual por nuestro local, taller y trabajos realizados.</p>
+        </div>
+        <div class="gallery-count" data-aos="fade-up" data-aos-delay="100">
+          <i class="fas fa-images"></i> <strong id="galeriaCount">0</strong> fotos
+        </div>
+      </div>
+
+      <div class="gallery-grid" id="galeriaGrid" data-aos="fade-up" data-aos-delay="150">
+        <!-- Skeletons mientras carga -->
+        <div class="gallery-skeleton h1"></div>
+        <div class="gallery-skeleton h2"></div>
+        <div class="gallery-skeleton h3"></div>
+        <div class="gallery-skeleton h2"></div>
+        <div class="gallery-skeleton h1"></div>
+        <div class="gallery-skeleton h3"></div>
+      </div>
+      <p class="gallery-scroll-hint"><i class="fas fa-hand-point-right"></i> Deslizá para ver más <i class="fas fa-hand-point-right"></i></p>
+    </div>
+  </section>
+
   <!-- ========== CONTACTO ========== -->
   <section id="contacto" class="contact">
     <div class="container">
@@ -432,6 +460,18 @@
   </section>
 </main>
 
+<!-- ========== LIGHTBOX GALERÍA ========== -->
+<div class="lightbox-overlay" id="lightboxOverlay">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+  <button class="lightbox-prev" id="lightboxPrev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+  <button class="lightbox-next" id="lightboxNext" aria-label="Siguiente"><i class="fas fa-chevron-right"></i></button>
+  <div class="lightbox-content">
+    <img id="lightboxImg" src="" alt="">
+    <p class="lightbox-caption" id="lightboxCaption"></p>
+  </div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
+
 <!-- ========== BOTÓN FLOTANTE WHATSAPP ========== -->
 <a href="https://wa.me/5492984287176" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
   <i class="fab fa-whatsapp"></i>
@@ -465,6 +505,7 @@
           <li><a href="#servicios">Servicios</a></li>
           <li><a href="#buscador">Buscador</a></li>
           <li><a href="#promociones">Promociones</a></li>
+          <li><a href="#galeria">Galería</a></li>
           <li><a href="#contacto">Contacto</a></li>
         </ul>
       </div>
@@ -476,11 +517,22 @@
       </div>
       <div class="footer-col">
         <h4>Ubicación</h4>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3105.1234567890123!2d-67.827!3d-38.977!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95e3a5a5a5a5a5a5%3A0x123456789abcdef!2sAllen%2C%20R%C3%ADo%20Negro!5e0!3m2!1ses!2sar!4v1690000000000!5m2!1ses!2sar" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy" title="Ubicación"></iframe>
+        <div class="footer-map-card">
+          <div class="footer-map-badge">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Brevi Neumáticos</span>
+          </div>
+          <div class="footer-map-frame">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3101.27734309583!2d-67.83196!3d-38.98616619999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x960a230cdc118f7f%3A0x25b91bd7538a613a!2sBrevi%20Neum%C3%A1ticos!5e0!3m2!1ses!2sar!4v1782315361982!5m2!1ses!2sar" width="100%" height="180" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+          <a href="https://maps.google.com/?q=Brevi+Neumáticos+Allen+Río+Negro" target="_blank" rel="noopener" class="footer-map-btn">
+            <i class="fas fa-directions"></i> Cómo llegar
+          </a>
+        </div>
       </div>
     </div>
     <div class="copyright">
-      <p>&copy; 2026 Brevi Neumáticos - Todos los derechos reservados</p>
+      <p>&copy; 2026 Brevi Neumáticos </p>
     </div>
   </div>
 </footer>
